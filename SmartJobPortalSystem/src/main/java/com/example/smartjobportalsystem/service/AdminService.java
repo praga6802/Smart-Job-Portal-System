@@ -102,17 +102,23 @@ public class AdminService {
     //approve job
     public ResponseEntity<?> approveJob(Integer id) {
         Job job=jobRepo.findById(id).orElseThrow(()-> new NotFoundException("Job ID",id));
+        if(job.getStatus().equalsIgnoreCase("APPROVED"))
+            return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse(LocalDateTime.now(),"APPROVED","Job has been already APPROVED"));
+
         job.setStatus("APPROVED");
         jobRepo.save(job);
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Job Approved for Job ID "+id));
+        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Job APPROVED for Job ID "+id));
     }
 
     //reject job
     public ResponseEntity<?> rejectJob(Integer id) {
         Job job=jobRepo.findById(id).orElseThrow(()-> new NotFoundException("Job ID",id));
+        if(job.getStatus().equalsIgnoreCase("REJECTED"))
+            return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse(LocalDateTime.now(),"REJECTED","Job has been already REJECTED"));
+
         job.setStatus("REJECTED");
         jobRepo.save(job);
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Failure","Job Rejected for Job ID "+id));
+        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Failure","Job REJECTED for Job ID "+id));
     }
 
 

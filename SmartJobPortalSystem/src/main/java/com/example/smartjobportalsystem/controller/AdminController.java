@@ -138,13 +138,14 @@ public class AdminController {
     }
 
 
-    //
+    //get the number of applicants per job
     @GetMapping("/application-per-job")
     public ResponseEntity<?> getApplicationPerJob(){
         return ResponseEntity.ok(adminService.getApplicationPerJob());
     }
 
 
+    //get the number of applicants per company
     @GetMapping("/application-per-company")
     public ResponseEntity<?> getApplicationPerCompany(){
         return ResponseEntity.ok(adminService.getApplicationPerCompany());

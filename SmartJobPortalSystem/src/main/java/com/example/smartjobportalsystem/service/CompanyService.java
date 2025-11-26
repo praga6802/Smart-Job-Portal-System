@@ -186,11 +186,13 @@ public class CompanyService {
         //if some user applied to a particular job in this company
         List<ApplicantsDTO> applicantResponse=jobApplications.stream().
                 map(a-> new ApplicantsDTO(
+                        a.getApplicationId(),
                         a.getApplicant().getUserId(),
                         a.getJob().getJobId(),
                         a.getJob().getJobTitle(),
                         a.getApplicant().getUsername(),
                         a.getApplicant().getEmail(),
+                        a.getStatus(),
                         a.getAppliedAt()
                 )).toList();
         return ResponseEntity.ok(applicantResponse);
@@ -209,6 +211,9 @@ public class CompanyService {
             return ResponseEntity.ok
                     (new ApiResponse(LocalDateTime.now(), "Failure", "You are not allowed to approve applicants for this job."));
         }
+        if(application.getStatus().equalsIgnoreCase("APPROVED"))
+            return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse(LocalDateTime.now(),"APPROVED","Applicant has been already APPROVED"));
+
         application.setStatus("APPROVED");
         jobApplicationRepo.save(application);
         subject="Congratulations! You are Selected";
@@ -232,8 +237,11 @@ public class CompanyService {
 
         if (!job.getCompany().getEmail().equals(email)) {
             return ResponseEntity.ok
-                    (new ApiResponse(LocalDateTime.now(), "Failure", "You are not allowed to approve applicants for this job."));
+                    (new ApiResponse(LocalDateTime.now(), "Failure", "You are not allowed to reject applicants for this job."));
         }
+        if(application.getStatus().equalsIgnoreCase("REJECTED"))
+            return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse(LocalDateTime.now(),"REJECTED","Applicant has been already REJECTED"));
+
         application.setStatus("REJECTED");
         jobApplicationRepo.save(application);
         subject="Application Status Update";

@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 public class ApplicantsDTO {
 
     private Integer applicantId;
+    private Integer applicationId;
     private String applicantName;
     private String email;
+    private String status;
     private LocalDateTime appliedAt;
     private Integer jobId;
     private String jobTitle;
@@ -23,12 +25,14 @@ public class ApplicantsDTO {
         this.appliedAt = appliedAt;
     }
 
-    public ApplicantsDTO(Integer appplicantId,Integer jobId,String jobTitle, String applicantName, String email, LocalDateTime appliedAt) {
-        this.applicantId=appplicantId;
+    public ApplicantsDTO(Integer applicationId,Integer applicantId,Integer jobId,String jobTitle, String applicantName, String email,String status, LocalDateTime appliedAt) {
+        this.applicationId=applicationId;
+        this.applicantId=applicantId;
         this.jobId=jobId;
         this.jobTitle=jobTitle;
         this.applicantName = applicantName;
         this.email = email;
+        this.status=status;
         this.appliedAt = appliedAt;
     }
 
