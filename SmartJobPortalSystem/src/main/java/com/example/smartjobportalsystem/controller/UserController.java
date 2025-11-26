@@ -1,6 +1,10 @@
 package com.example.smartjobportalsystem.controller;
 
 
+import com.example.smartjobportalsystem.dto.EmailDTO;
+import com.example.smartjobportalsystem.dto.EmailReqDTO;
+import com.example.smartjobportalsystem.dto.EmailVerificationDTO;
+import com.example.smartjobportalsystem.dto.VerificationType;
 import com.example.smartjobportalsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -68,4 +72,15 @@ public class UserController {
         return userService.downloadResume(email);
     }
 
+    @PostMapping("/verifyEmail")
+    public ResponseEntity<?> sendCode(@RequestBody EmailReqDTO emailDTO, @AuthenticationPrincipal UserDetails user){
+        String logEmail=user.getUsername();
+        String mail=emailDTO.getEmail();
+        return userService.sendCode(logEmail,mail);
+    }
+
+    @PostMapping("/verifyCode")
+    public ResponseEntity<?> verifyCode(@RequestBody EmailVerificationDTO verify, @AuthenticationPrincipal UserDetails user){
+        return userService.verifyCode(user, verify.getCode());
+    }
 }

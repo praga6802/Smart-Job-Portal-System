@@ -5,16 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fce180f0-57f2-49a8-bc20-c8d3cc286a64" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/EmailDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/EmailReqDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/EmailVerificationDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/VerificationType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/VerificationTable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/VerificationRepo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ApplicantsDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ApplicantsDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Users.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CompanyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CompanyService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

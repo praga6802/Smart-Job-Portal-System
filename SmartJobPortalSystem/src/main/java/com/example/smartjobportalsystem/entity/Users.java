@@ -27,6 +27,7 @@ public class Users implements UserDetails {
     private String role;
 
     private String resumePath;
+    private Boolean isVerified;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

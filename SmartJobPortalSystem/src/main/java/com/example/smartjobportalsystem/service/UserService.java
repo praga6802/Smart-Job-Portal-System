@@ -1,20 +1,21 @@
 package com.example.smartjobportalsystem.service;
 
-import com.example.smartjobportalsystem.dto.ApiResponse;
-import com.example.smartjobportalsystem.dto.ApplicationStatusDTO;
-import com.example.smartjobportalsystem.dto.JobDTO;
+import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.Job;
 import com.example.smartjobportalsystem.entity.JobApplication;
 import com.example.smartjobportalsystem.entity.Users;
+import com.example.smartjobportalsystem.entity.VerificationTable;
 import com.example.smartjobportalsystem.exception.NameNotFoundException;
 import com.example.smartjobportalsystem.exception.NotFoundException;
 import com.example.smartjobportalsystem.exception.UnAuthorizedException;
 import com.example.smartjobportalsystem.repository.JobApplicationRepo;
 import com.example.smartjobportalsystem.repository.JobRepo;
 import com.example.smartjobportalsystem.repository.UsersRepo;
+import com.example.smartjobportalsystem.repository.VerificationRepo;
 import io.jsonwebtoken.Header;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -40,6 +43,11 @@ public class UserService {
     @Autowired
     JobApplicationRepo jobApplicationRepo;
 
+    @Autowired
+    EmailService emailService;
+
+    @Autowired
+    VerificationRepo verificationRepo;
 
     //apply job for the company
     public ResponseEntity<?> applyJob(Integer jobId, String email) {
@@ -212,7 +220,47 @@ public class UserService {
         header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         header.setContentDisposition(ContentDisposition.attachment().filename(path.getFileName().toString()).build());
         return new ResponseEntity<>(fileBytes,header,HttpStatus.OK);
+    }
 
+    //send the otp
+    public ResponseEntity<?> sendCode(String logEmail, String email) {
+        Users user = usersRepo.findByEmail(logEmail).orElseThrow(() -> new NameNotFoundException("Email ID", logEmail));
+
+        if (!logEmail.equalsIgnoreCase(email)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).
+                    body(new ApiResponse(LocalDateTime.now(), "Failure", "Both login and given email not matches"));
+        }
+        int otp=100000+new Random().nextInt(900000);
+        VerificationTable verificationTable=new VerificationTable(user, VerificationType.EMAIL,String.valueOf(otp),LocalDateTime.now().plusMinutes(10));
+        verificationRepo.save(verificationTable);
+
+        emailService.sendEmail(new EmailDTO(user.getEmail(), "Email Verification", "Your verification code is: " + otp));
+
+        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", "Verification code has been sent Successfully"));
+    }
+
+
+    //verify the otp
+    public ResponseEntity<?> verifyCode(UserDetails users, String code) {
+        Users user=usersRepo.findByEmail(users.getUsername()).orElseThrow(()-> new NameNotFoundException("Email ID",users.getUsername()));
+
+        VerificationTable verification=verificationRepo.findByUserAndCodeAndTypeAndIsUsedFalse(user,code,VerificationType.EMAIL).
+                orElseThrow(()-> new UnAuthorizedException("Invalid Code",code));
+
+        if(verification.getIsUsed()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).
+                    body(new ApiResponse(LocalDateTime.now(),"Failure","Code has been already used"));
+        }
+        if(verification.getExpiresAt().isBefore(LocalDateTime.now())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).
+                    body(new ApiResponse(LocalDateTime.now(),"Failure","Code has been expired"));
+        }
+        verification.setIsUsed(true);
+        user.setIsVerified(true);
+        verificationRepo.save(verification);
+        usersRepo.save(user);
+        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Email has been verified Successfully"));
     }
 }
+
 

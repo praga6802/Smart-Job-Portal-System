@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -222,7 +220,7 @@ public class CompanyService {
                 +"Our HR team will contact you soon.\n\n" +
                 "Regards,\n"+application.getJob().getCompany().getUsername()+" Team.";
 
-        emailService.sendEmail(application.getApplicant().getEmail(),subject,body);
+        emailService.sendEmail(new EmailDTO(application.getApplicant().getEmail(),subject,body));
         return ResponseEntity.ok
                 (new ApiResponse(LocalDateTime.now(), "Success", "Approved successfully for Applicant ID:" + application.getApplicant().getUserId()));
     }
@@ -250,7 +248,7 @@ public class CompanyService {
                 "We regret to inform you that you are not selected for the role you applied for "+application.getJob().getJobTitle()+"."+"\n\n" +
                 "Best wishes for your future!\n"+application.getJob().getCompany().getUsername()+" Team.";
 
-        emailService.sendEmail(application.getApplicant().getEmail(),subject,body);
+        emailService.sendEmail(new EmailDTO(application.getApplicant().getEmail(),subject,body));
 
         return ResponseEntity.ok
                 (new ApiResponse(LocalDateTime.now(), "Success", "Rejected successfully for Applicant ID:" + application.getApplicant().getUserId()));
