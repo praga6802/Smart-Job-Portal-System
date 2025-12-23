@@ -50,63 +50,63 @@ A RESTful Job Portal Backend built with Spring Boot that supports JWT-based auth
    •	Email & OTP verification
 
 
-    **Resume management:**
- 
-      •	Upload resume
-      
-      •	View resume
-      
-      •	Download resume
-      
-      •	Delete resume
+ **Resume management:**
+
+   •	Upload resume
+   
+   •	View resume
+   
+   •	Download resume
+   
+   •	Delete resume
 
 
 **4. Admin Module**
       
-**   Manage admins:**
+   **Manage admins:**
    
-      •	Get all admins
-      
-      •	Get admin by ID
-      
-      •	Get admin by username
-      
-      •	Delete admin
+   •	Get all admins
+   
+   •	Get admin by ID
+   
+   •	Get admin by username
+   
+   •	Delete admin
 
 
   ** Manage users:**
    
-      •	Get all users
-      
-      •	Get user by ID
-      
-      •	Get user by username
-      
-      •	Delete user
+   •	Get all users
+   
+   •	Get user by ID
+   
+   •	Get user by username
+   
+   •	Delete user
    
    
    **Manage companies:**
    
-      •	Get all companies
-      
-      •	Get company by ID
-      
-      •	Get company by username
-      
-      •	Delete company
+   • Get all companies
+   
+   •	Get company by ID
+   
+   •	Get company by username
+   
+   •	Delete company
       
    
   ** Job moderation:**
       
-      •	Approve job
-      
-      •	Reject job
-      
-      •	View pending jobs
+   •	Approve job
+   
+   •	Reject job
+   
+   •	View pending jobs
    
    
    **Applications:**
       
-      •	Applications per job
-      
-      •	Applications per company
+   •	Applications per job
+   
+   •	Applications per company
