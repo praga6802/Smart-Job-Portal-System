@@ -1,7 +1,12 @@
-SMART JOB PORTAL SYSTEM
-A RESTful Job Portal Backend built with Spring Boot that supports multiple roles (Admin, Company, User) and covers authentication, job management, applications, resume handling, and approval workflows.
+**SMART JOB PORTAL SYSTEM**
+
+
+A RESTful Job Portal Backend built with Spring Boot that supports JWT-based authentication and multiple roles (Admin, Company, User), enabling secure job management, applications, resume handling, and approval workflows.
+
 
 FEATURES OVERVIEW
+
+
 1. Authentication (Auth) Module
    
    •	Register
