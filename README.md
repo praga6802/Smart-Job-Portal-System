@@ -4,10 +4,10 @@
 A RESTful Job Portal Backend built with Spring Boot that supports JWT-based authentication and multiple roles (Admin, Company, User), enabling secure job management, applications, resume handling, and approval workflows.
 
 
-FEATURES OVERVIEW
+**FEATURES OVERVIEW**
 
 
-1. Authentication (Auth) Module
+**1. Authentication (Auth) Module**
    
    •	Register
    
@@ -18,7 +18,7 @@ FEATURES OVERVIEW
    •	Forgot password
 
 
-2. Company Module
+**2. Company Module**
    
    •	Post a job
    
@@ -39,7 +39,7 @@ FEATURES OVERVIEW
    •	Reject applicant
 
 
-3. User Module
+**3. User Module**
 
    •	Find jobs
    
@@ -50,7 +50,7 @@ FEATURES OVERVIEW
    •	Email & OTP verification
 
 
-    Resume management:
+    **Resume management:**
  
       •	Upload resume
       
@@ -61,9 +61,9 @@ FEATURES OVERVIEW
       •	Delete resume
 
 
-4. Admin Module
+**4. Admin Module**
       
-   Manage admins:
+**   Manage admins:**
    
       •	Get all admins
       
@@ -74,7 +74,7 @@ FEATURES OVERVIEW
       •	Delete admin
 
 
-   Manage users:
+  ** Manage users:**
    
       •	Get all users
       
@@ -85,7 +85,7 @@ FEATURES OVERVIEW
       •	Delete user
    
    
-   Manage companies:
+   **Manage companies:**
    
       •	Get all companies
       
@@ -96,7 +96,7 @@ FEATURES OVERVIEW
       •	Delete company
       
    
-   Job moderation:
+  ** Job moderation:**
       
       •	Approve job
       
@@ -105,7 +105,7 @@ FEATURES OVERVIEW
       •	View pending jobs
    
    
-   Applications:
+   **Applications:**
       
       •	Applications per job
       
