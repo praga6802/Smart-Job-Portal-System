@@ -1,100 +1,59 @@
 SMART JOB PORTAL SYSTEM
-
 A RESTful Job Portal Backend built with Spring Boot that supports multiple roles (Admin, Company, User) and covers authentication, job management, applications, resume handling, and approval workflows.
 
-🚀 Features Overview
-👤 Authentication (Auth)
+FEATURES OVERVIEW
+1. Authentication (Auth)
+•	Register
+•	Login
+•	Update profile
+•	Forgot password
 
-Register
+2. Company Module
+•	Post a job
+•	Update a job
+•	Delete a job
+•	Get all jobs
+•	Get job by ID
+•	View applicants for a job
+•	View all applicants
+•	Approve applicant
+•	Reject applicant
 
-Login
+3. User Module
+•	Find jobs
+•	Apply for job
+•	View application status
+•	Email & OTP verification
+ Resume management:
+•	Upload resume
+•	View resume
+•	Download resume
+•	Delete resume
 
-Update profile
-
-Forgot password
-
-🏢 Company Module
-
-Post a job
-
-Update a job
-
-Delete a job
-
-Get all jobs
-
-Get job by ID
-
-View applicants for a job
-
-View all applicants
-
-Approve applicant
-
-Reject applicant
-
-🙋 User Module
-
-Find jobs
-
-Apply for job
-
-View application status
-
-Resume management:
-
-Upload resume
-
-View resume
-
-Download resume
-
-Delete resume
-
-Email & OTP verification
-
-🛡️ Admin Module
-
+4. Admin Module
 Manage admins:
-
-Get all admins
-
-Get admin by ID
-
-Get admin by username
-
-Delete admin
+•	Get all admins
+•	Get admin by ID
+•	Get admin by username
+•	Delete admin
 
 Manage users:
-
-Get all users
-
-Get user by ID
-
-Get user by username
-
-Delete user
+•	Get all users
+•	Get user by ID
+•	Get user by username
+•	Delete user
 
 Manage companies:
-
-Get all companies
-
-Get company by ID
-
-Get company by username
-
-Delete company
+•	Get all companies
+•	Get company by ID
+•	Get company by username
+•	Delete company
 
 Job moderation:
-
-Approve job
-
-Reject job
-
-View pending jobs
+•	Approve job
+•	Reject job
+•	View pending jobs
 
 Applications:
-
-Applications per job
-
-Applications per company
+•	Applications per job
+•	Applications per company
