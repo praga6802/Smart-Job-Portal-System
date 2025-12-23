@@ -116,16 +116,6 @@ public class UserService {
         //validating the user
         Users user=usersRepo.findByEmail(email).orElseThrow(()-> new NameNotFoundException("Email ID",email));
 
-        //validating the user
-        if(!"ROLE_USER".equalsIgnoreCase(user.getRole())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","Only Job Seekers can upload their resume."));
-        }
-        //check if the content is not empty
-        if(file.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","File cannot be empty"));
-        }
 
         //check if the file type mismatch
         String fileType = file.getContentType();
@@ -134,19 +124,36 @@ public class UserService {
                     .body(new ApiResponse(LocalDateTime.now(), "Failure", "Only PDF or DOCX files are allowed"));
         }
 
+        //check if the content is not empty
+        if(file.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
+                    body(new ApiResponse(LocalDateTime.now(),"Failure","File cannot be empty"));
+        }
+
+
+        //validating the user
+        if(!"ROLE_USER".equalsIgnoreCase(user.getRole())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).
+                    body(new ApiResponse(LocalDateTime.now(),"Failure","Only Job Seekers can upload their resume."));
+        }
+
+
         //create folder for uploading resume
         String dirPath="uploads/";
         File dir=new File(dirPath);
         if(!dir.exists()){
             dir.mkdirs();
         }
+
+        //creating file name
         String orgFileName=file.getOriginalFilename();
         String extension= Objects.requireNonNull(orgFileName).substring(orgFileName.indexOf("."));
         String fileName=user.getUsername()+"_"+ LocalDate.now()+extension;
 
+        //creating file path
         Path filePath= Paths.get(dirPath + fileName);
 
-        //save file
+        //writing file content into file path
         Files.write(filePath,file.getBytes());
 
         //save file path for the user role only
@@ -223,7 +230,7 @@ public class UserService {
     }
 
     //send the otp
-    public ResponseEntity<?> sendCode(String logEmail, String email) {
+    public ResponseEntity<?> verifyEmailAndSendCode(String logEmail, String email) {
         Users user = usersRepo.findByEmail(logEmail).orElseThrow(() -> new NameNotFoundException("Email ID", logEmail));
 
         if (!logEmail.equalsIgnoreCase(email)) {
@@ -234,14 +241,16 @@ public class UserService {
         VerificationTable verificationTable=new VerificationTable(user, VerificationType.EMAIL,String.valueOf(otp),LocalDateTime.now().plusMinutes(10));
         verificationRepo.save(verificationTable);
 
-        emailService.sendEmail(new EmailDTO(user.getEmail(), "Email Verification", "Your verification code is: " + otp));
+        emailService.sendEmail(new EmailDTO(user.getEmail(), "Email Verification", "Your verification code is: " + otp+ "\n\n" +
+                "This code will expire in 10 minutes.\n\n" +
+                "Regards,\nSmart Job Portal Team"));
 
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", "Verification code has been sent Successfully"));
     }
 
 
     //verify the otp
-    public ResponseEntity<?> verifyCode(UserDetails users, String code) {
+    public ResponseEntity<?> verifyEmailCode(UserDetails users, String code) {
         Users user=usersRepo.findByEmail(users.getUsername()).orElseThrow(()-> new NameNotFoundException("Email ID",users.getUsername()));
 
         VerificationTable verification=verificationRepo.findByUserAndCodeAndTypeAndIsUsedFalse(user,code,VerificationType.EMAIL).
@@ -256,11 +265,27 @@ public class UserService {
                     body(new ApiResponse(LocalDateTime.now(),"Failure","Code has been expired"));
         }
         verification.setIsUsed(true);
-        user.setIsVerified(true);
+        user.setIsEmailVerified(true);
         verificationRepo.save(verification);
         usersRepo.save(user);
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Email has been verified Successfully"));
     }
+
+    public ResponseEntity<?> verifyMobileAndSendCode(String logEmail, String mobNumber) {
+        Users user= usersRepo.findByEmail(logEmail).orElseThrow(()-> new NameNotFoundException("Email ID",logEmail));
+        if(!mobNumber.equals(user.getMobNumber())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).
+                    body(new ApiResponse(LocalDateTime.now(),"Failure","Given mobile number not matches"));
+        }
+        int otp=100000+new Random().nextInt(900000);
+        VerificationTable verification= new VerificationTable(user,VerificationType.PHONE,String.valueOf(otp),LocalDateTime.now().plusMinutes(2));
+        emailService.sendEmail(new EmailDTO(user.getEmail(),"Mobile Number Verification","Your verification code is: " + otp+ "\n\n" +
+                "This code will expire in 10 minutes.\n\n" +
+                "Regards,\nSmart Job Portal Team"));
+
+        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", "Verification code has been sent Successfully"));
+    }
+
 }
 
 

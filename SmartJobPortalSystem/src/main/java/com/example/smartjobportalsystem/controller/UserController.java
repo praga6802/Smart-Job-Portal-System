@@ -1,10 +1,7 @@
 package com.example.smartjobportalsystem.controller;
 
 
-import com.example.smartjobportalsystem.dto.EmailDTO;
-import com.example.smartjobportalsystem.dto.EmailReqDTO;
-import com.example.smartjobportalsystem.dto.EmailVerificationDTO;
-import com.example.smartjobportalsystem.dto.VerificationType;
+import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,14 +70,27 @@ public class UserController {
     }
 
     @PostMapping("/verifyEmail")
-    public ResponseEntity<?> sendCode(@RequestBody EmailReqDTO emailDTO, @AuthenticationPrincipal UserDetails user){
+    public ResponseEntity<?> verifyEmailAndSendCode(@RequestBody EmailReqDTO emailDTO, @AuthenticationPrincipal UserDetails user){
         String logEmail=user.getUsername();
         String mail=emailDTO.getEmail();
-        return userService.sendCode(logEmail,mail);
+        return userService.verifyEmailAndSendCode(logEmail,mail);
     }
 
-    @PostMapping("/verifyCode")
-    public ResponseEntity<?> verifyCode(@RequestBody EmailVerificationDTO verify, @AuthenticationPrincipal UserDetails user){
-        return userService.verifyCode(user, verify.getCode());
+    @PostMapping("/verifyEmailCode")
+    public ResponseEntity<?> verifyEmailCode(@RequestBody EmailVerificationDTO verify, @AuthenticationPrincipal UserDetails user){
+        return userService.verifyEmailCode(user, verify.getCode());
     }
+
+
+    @PostMapping("/verifyMobile")
+    public ResponseEntity<?> verifyMobileAndSendCode(@RequestBody MobileReqDTO mobileDTO, @AuthenticationPrincipal UserDetails user){
+        String logEmail=user.getUsername();
+        String mobNumber=mobileDTO.getMobileNumber();
+        return userService.verifyMobileAndSendCode(logEmail,mobNumber);
+    }
+
+//    @PostMapping("/verifyMobileCode")
+//    public ResponseEntity<?> verifyMobileCode(@RequestBody EmailVerificationDTO verify, @AuthenticationPrincipal UserDetails user){
+//        return userService.verifyMobileCode(user, verify.getCode());
+//    }
 }

@@ -47,19 +47,19 @@ public class UserJWTAuthenticationFilter extends OncePerRequestFilter {
                 response.getWriter().write("Token expired.. Please try again");
             }
         }
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
-                if (jwtUtil.validateToken(userDetails, token)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-
+            if (jwtUtil.validateToken(userDetails, token)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-            filterChain.doFilter(request, response);
+
+        }
+        filterChain.doFilter(request, response);
     }
 
     @Override

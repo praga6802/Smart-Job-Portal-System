@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SmartJobPortalSystem.iml" filepath="$PROJECT_DIR$/.idea/SmartJobPortalSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SmartJobPortalSystem/SpringSecurity.iml" filepath="$PROJECT_DIR$/SmartJobPortalSystem/SpringSecurity.iml" />
     </modules>
   </component>
 </project>
