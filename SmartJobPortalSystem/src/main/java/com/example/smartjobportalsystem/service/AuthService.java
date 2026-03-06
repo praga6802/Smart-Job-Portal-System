@@ -1,10 +1,7 @@
 package com.example.smartjobportalsystem.service;
 
 
-import com.example.smartjobportalsystem.dto.ApiResponse;
-import com.example.smartjobportalsystem.dto.LoginResponse;
-import com.example.smartjobportalsystem.dto.LoginUserDTO;
-import com.example.smartjobportalsystem.dto.UpdateUserDTO;
+import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.exception.AlreadyExistsException;
 import com.example.smartjobportalsystem.exception.NameNotFoundException;
@@ -41,35 +38,31 @@ public class AuthService {
     private JwtUtil jwtUtil;
 
 
-    //login user or admin or company
-    public ResponseEntity<LoginResponse> login(LoginUserDTO user) {
-
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).
-                    body(new LoginResponse(new ApiResponse(LocalDateTime.now(),"Failure","Invalid Credentials"),null));
-        }
-
-        String token = jwtUtil.generateToken(user.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).
-                body(new LoginResponse(new ApiResponse(LocalDateTime.now(),"Success","Login Successfully"),token));
-    }
-
 
     //registers user or admin or company
-    public ResponseEntity<ApiResponse> registerUsers(Users users) {
-        if (usersRepo.existsByEmail(users.getEmail())) {
-            throw new AlreadyExistsException("Email", users.getEmail());
+    public ResponseEntity<ApiResponse> registerUsers(RegisterDTO users) {
+
+        if(usersRepo.existsByUsername(users.getUsername())){
+            throw new AlreadyExistsException("User Name",users.getUsername());
         }
 
-        users.setUsername(users.getUsername()); // set proper display name
-        users.setEmail(users.getEmail().toLowerCase());
-        users.setPassword(passwordEncoder.encode(users.getPassword()));
-        users.setRole("ROLE_"+ users.getRole().toUpperCase());
+        if (usersRepo.existsByEmail(users.getEmail())) {
+            throw new AlreadyExistsException("Email", users.getEmail());
 
-        usersRepo.save(users);
+        }
+
+        if(usersRepo.existsByMobNumber(users.getMobNumber())){
+            throw new AlreadyExistsException("Mobile Number",users.getMobNumber());
+        }
+
+        Users user= new Users();
+        user.setUsername(users.getUsername()); // set proper display name
+        user.setEmail(users.getEmail().toLowerCase());
+        user.setPassword(passwordEncoder.encode(users.getPassword()));
+        user.setRole("ROLE_"+ users.getRole().toUpperCase());
+        user.setMobNumber(users.getMobNumber());
+
+        usersRepo.save(user);
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", "Sign Up Successfully"));
     }
 

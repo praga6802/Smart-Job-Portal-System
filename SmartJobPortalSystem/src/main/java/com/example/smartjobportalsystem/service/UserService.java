@@ -96,138 +96,132 @@ public class UserService {
     }
 
     // find the job by company
-    public ResponseEntity<?> findJobsByCompany(String c) {
-        Users company = usersRepo.findByUsername(c).orElseThrow(() -> new NameNotFoundException("Company", c));
+    public List<JobDTO> viewJobsByCompany(String companyName) {
+        Users company = usersRepo.findByUsername(companyName).orElseThrow(() -> new NameNotFoundException("Company", companyName));
 
-        List<Job> approvedJobs=jobRepo.findByCompanyAndStatus(company,"APPROVED");
-        if(approvedJobs.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","No jobs were found for "+company.getUsername()));
-        }
-
-        List<JobDTO> response = approvedJobs.stream().
-                    map(j -> new JobDTO(j.getJobId(),j.getJobTitle(), j.getSkills(), j.getJobDescription(), j.getSalary(), j.getExperience(), j.getJobLocation(), j.getJobType()))
-                    .toList();
-            return ResponseEntity.ok(response);
+        List<JobDTO> jobs= jobRepo.findAll().stream().filter(j->j.getStatus().equals("APPROVED"))
+                .map(j-> new JobDTO(j.getJobId(),j.getJobTitle(),j.getJobDescription(),j.getSkills(),j.getSalary(),j.getExperience(),j.getJobLocation(),j.getJobType()))
+                .toList();
+        return jobs;
         }
 
         //upload resume
-    public ResponseEntity<?> uploadResume(MultipartFile file, String email) throws IOException {
-        //validating the user
-        Users user=usersRepo.findByEmail(email).orElseThrow(()-> new NameNotFoundException("Email ID",email));
-
-
-        //check if the file type mismatch
-        String fileType = file.getContentType();
-        if (!("application/pdf".equals(fileType) || "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equals(fileType))) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse(LocalDateTime.now(), "Failure", "Only PDF or DOCX files are allowed"));
-        }
-
-        //check if the content is not empty
-        if(file.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","File cannot be empty"));
-        }
-
-
-        //validating the user
-        if(!"ROLE_USER".equalsIgnoreCase(user.getRole())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","Only Job Seekers can upload their resume."));
-        }
-
-
-        //create folder for uploading resume
-        String dirPath="uploads/";
-        File dir=new File(dirPath);
-        if(!dir.exists()){
-            dir.mkdirs();
-        }
-
-        //creating file name
-        String orgFileName=file.getOriginalFilename();
-        String extension= Objects.requireNonNull(orgFileName).substring(orgFileName.indexOf("."));
-        String fileName=user.getUsername()+"_"+ LocalDate.now()+extension;
-
-        //creating file path
-        Path filePath= Paths.get(dirPath + fileName);
-
-        //writing file content into file path
-        Files.write(filePath,file.getBytes());
-
-        //save file path for the user role only
-        user.setResumePath(filePath.toString());
-        usersRepo.save(user);
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Resume has been uploaded Successfully"));
-    }
-
-    //delete resume
-    public ResponseEntity<?> deleteResume(String email) {
-        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
-
-        String resumePath=user.getResumePath();
-
-        if(resumePath==null || resumePath.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(LocalDateTime.now(),"Failure","No resume found"));
-        }
-
-        Path path=Paths.get(resumePath);
-        try{
-            //delete file
-            Files.deleteIfExists(path);
-
-            //delete from db also
-            user.setResumePath(null);
-            usersRepo.save(user);
-            return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Resume Deleted Successfully"));
-        }
-        catch (IOException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","Error Deleting file"));
-        }
-    }
-
-    //view resume
-    public ResponseEntity<?> viewResume(String email) throws IOException {
-        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
-
-        String resumePath=user.getResumePath();
-
-        if(resumePath==null || resumePath.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(LocalDateTime.now(),"Failure","No resume found"));
-        }
-        Path path=Paths.get(resumePath);
-        byte[] fileBytes=Files.readAllBytes(path);
-
-        HttpHeaders httpHeaders= new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_PDF);
-        httpHeaders.setContentDisposition(ContentDisposition.inline()
-                .filename(path.getFileName().toString())
-                .build());
-        return new ResponseEntity<>(fileBytes,httpHeaders,HttpStatus.OK);
-    }
-
-    // download resume
-    public ResponseEntity<?> downloadResume(String email) throws IOException {
-        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
-
-        String resumePath = user.getResumePath();
-
-        if (resumePath == null || resumePath.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(LocalDateTime.now(), "Failure", "No resume found"));
-        }
-        Path path=Paths.get(resumePath);
-        byte[] fileBytes=Files.readAllBytes(path);
-
-        HttpHeaders header= new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        header.setContentDisposition(ContentDisposition.attachment().filename(path.getFileName().toString()).build());
-        return new ResponseEntity<>(fileBytes,header,HttpStatus.OK);
-    }
+//    public ResponseEntity<?> uploadResume(MultipartFile file, String email) throws IOException {
+//        //validating the user
+//        Users user=usersRepo.findByEmail(email).orElseThrow(()-> new NameNotFoundException("Email ID",email));
+//
+//
+//        //check if the file type mismatch
+//        String fileType = file.getContentType();
+//        if (!("application/pdf".equals(fileType) || "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equals(fileType))) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(new ApiResponse(LocalDateTime.now(), "Failure", "Only PDF or DOCX files are allowed"));
+//        }
+//
+//        //check if the content is not empty
+//        if(file.isEmpty()){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
+//                    body(new ApiResponse(LocalDateTime.now(),"Failure","File cannot be empty"));
+//        }
+//
+//
+//        //validating the user
+//        if(!"ROLE_USER".equalsIgnoreCase(user.getRole())){
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).
+//                    body(new ApiResponse(LocalDateTime.now(),"Failure","Only Job Seekers can upload their resume."));
+//        }
+//
+//
+//        //create folder for uploading resume
+//        String dirPath="uploads/";
+//        File dir=new File(dirPath);
+//        if(!dir.exists()){
+//            dir.mkdirs();
+//        }
+//
+//        //creating file name
+//        String orgFileName=file.getOriginalFilename();
+//        String extension= Objects.requireNonNull(orgFileName).substring(orgFileName.indexOf("."));
+//        String fileName=user.getUsername()+"_"+ LocalDate.now()+extension;
+//
+//        //creating file path
+//        Path filePath= Paths.get(dirPath + fileName);
+//
+//        //writing file content into file path
+//        Files.write(filePath,file.getBytes());
+//
+//        //save file path for the user role only
+//        user.setResumePath(filePath.toString());
+//        usersRepo.save(user);
+//        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Resume has been uploaded Successfully"));
+//    }
+//
+//    //delete resume
+//    public ResponseEntity<?> deleteResume(String email) {
+//        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
+//
+//        String resumePath=user.getResumePath();
+//
+//        if(resumePath==null || resumePath.isEmpty()){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiResponse(LocalDateTime.now(),"Failure","No resume found"));
+//        }
+//
+//        Path path=Paths.get(resumePath);
+//        try{
+//            //delete file
+//            Files.deleteIfExists(path);
+//
+//            //delete from db also
+//            user.setResumePath(null);
+//            usersRepo.save(user);
+//            return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Resume Deleted Successfully"));
+//        }
+//        catch (IOException e){
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+//                    body(new ApiResponse(LocalDateTime.now(),"Failure","Error Deleting file"));
+//        }
+//    }
+//
+//    //view resume
+//    public ResponseEntity<?> viewResume(String email) throws IOException {
+//        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
+//
+//        String resumePath=user.getResumePath();
+//
+//        if(resumePath==null || resumePath.isEmpty()){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiResponse(LocalDateTime.now(),"Failure","No resume found"));
+//        }
+//        Path path=Paths.get(resumePath);
+//        byte[] fileBytes=Files.readAllBytes(path);
+//
+//        HttpHeaders httpHeaders= new HttpHeaders();
+//        httpHeaders.setContentType(MediaType.APPLICATION_PDF);
+//        httpHeaders.setContentDisposition(ContentDisposition.inline()
+//                .filename(path.getFileName().toString())
+//                .build());
+//        return new ResponseEntity<>(fileBytes,httpHeaders,HttpStatus.OK);
+//    }
+//
+//    // download resume
+//    public ResponseEntity<?> downloadResume(String email) throws IOException {
+//        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
+//
+//        String resumePath = user.getResumePath();
+//
+//        if (resumePath == null || resumePath.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiResponse(LocalDateTime.now(), "Failure", "No resume found"));
+//        }
+//        Path path=Paths.get(resumePath);
+//        byte[] fileBytes=Files.readAllBytes(path);
+//
+//        HttpHeaders header= new HttpHeaders();
+//        header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//        header.setContentDisposition(ContentDisposition.attachment().filename(path.getFileName().toString()).build());
+//        return new ResponseEntity<>(fileBytes,header,HttpStatus.OK);
+//    }
 
     //send the otp
     public ResponseEntity<?> verifyEmailAndSendCode(String logEmail, String email) {
@@ -265,27 +259,22 @@ public class UserService {
                     body(new ApiResponse(LocalDateTime.now(),"Failure","Code has been expired"));
         }
         verification.setIsUsed(true);
-        user.setIsEmailVerified(true);
         verificationRepo.save(verification);
         usersRepo.save(user);
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Email has been verified Successfully"));
     }
 
-    public ResponseEntity<?> verifyMobileAndSendCode(String logEmail, String mobNumber) {
-        Users user= usersRepo.findByEmail(logEmail).orElseThrow(()-> new NameNotFoundException("Email ID",logEmail));
-        if(!mobNumber.equals(user.getMobNumber())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","Given mobile number not matches"));
-        }
-        int otp=100000+new Random().nextInt(900000);
-        VerificationTable verification= new VerificationTable(user,VerificationType.PHONE,String.valueOf(otp),LocalDateTime.now().plusMinutes(2));
-        emailService.sendEmail(new EmailDTO(user.getEmail(),"Mobile Number Verification","Your verification code is: " + otp+ "\n\n" +
-                "This code will expire in 10 minutes.\n\n" +
-                "Regards,\nSmart Job Portal Team"));
 
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", "Verification code has been sent Successfully"));
+    // view all jobs posted
+    public List<JobDTO> viewAllJobs() {
+        List<JobDTO> response = jobRepo.findAll().stream().
+                filter(j->j.getStatus().equals("APPROVED")).
+                map(j -> new JobDTO(j.getCompanyName(),j.getJobId(),j.getJobTitle(), j.getJobDescription(), j.getSkills(), j.getSalary(), j.getExperience(),
+                        j.getJobLocation(), j.getJobType()))
+                .toList();
+        return response;
+
     }
-
 }
 
 

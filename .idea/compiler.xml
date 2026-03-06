@@ -11,11 +11,13 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
         <module name="SpringSecurity" />
+        <module name="SmartJobPortalSystem" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="SmartJobPortalSystem" options="-parameters" />
       <module name="SpringSecurity" options="-parameters" />
     </option>
   </component>

@@ -26,9 +26,8 @@ public class Users implements UserDetails {
     private String password;
     private String role;
     private String mobNumber;
-    private String resumePath;
-    private Boolean isEmailVerified;
-    private Boolean isMobileVerified;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));

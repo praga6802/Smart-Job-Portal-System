@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SmartJobPortalSystemApplication {
+public class SmartJobPortalSystem {
 
     public static void main(String[] args) {
-        SpringApplication.run(SmartJobPortalSystemApplication.class, args);
+        SpringApplication.run(SmartJobPortalSystem.class, args);
     }
 
 }

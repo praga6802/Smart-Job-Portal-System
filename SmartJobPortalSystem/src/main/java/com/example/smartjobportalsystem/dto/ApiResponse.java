@@ -12,26 +12,26 @@ public class ApiResponse {
 
     private String message;
     private String details;
-    private LocalDateTime localDateTime;
+    private LocalDateTime timestamp;
     private UserDTO userDTO;
     private JobDetailResponse jobDetailResponse;
 
-    public ApiResponse(LocalDateTime localDateTime, String message, String details) {
+    public ApiResponse(LocalDateTime timestamp, String message, String details) {
         this.message = message;
         this.details = details;
-        this.localDateTime = localDateTime;
+        this.timestamp = timestamp;
     }
 
 
-    public ApiResponse(LocalDateTime localDateTime, String message, String details, UserDTO userDTO) {
-        this.localDateTime = localDateTime;
+    public ApiResponse(LocalDateTime timestamp, String message, String details, UserDTO userDTO) {
+        this.timestamp = timestamp;
         this.message = message;
         this.details = details;
         this.userDTO = userDTO;
     }
 
-    public ApiResponse(LocalDateTime localDateTime, String message, String details, JobDetailResponse jobDetailResponse) {
-        this.localDateTime = localDateTime;
+    public ApiResponse(LocalDateTime timestamp, String message, String details, JobDetailResponse jobDetailResponse) {
+        this.timestamp = timestamp;
         this.message = message;
         this.details = details;
         this.jobDetailResponse = jobDetailResponse;

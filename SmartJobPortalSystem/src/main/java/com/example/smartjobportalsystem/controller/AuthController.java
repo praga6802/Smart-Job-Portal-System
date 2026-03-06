@@ -3,6 +3,7 @@ package com.example.smartjobportalsystem.controller;
 
 import com.example.smartjobportalsystem.dto.ForgotPasswordDTO;
 import com.example.smartjobportalsystem.dto.LoginUserDTO;
+import com.example.smartjobportalsystem.dto.RegisterDTO;
 import com.example.smartjobportalsystem.dto.UpdateUserDTO;
 import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.service.AuthService;
@@ -22,14 +23,8 @@ public class AuthController {
 
     //register for admin, user and company
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody Users user){
-        return authService.registerUsers(user);
-    }
-
-    //login for admin, user and company
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginUserDTO user) {
-        return authService.login(user);
+    public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
+        return authService.registerUsers(registerDTO);
     }
 
     //update for admin, user and company

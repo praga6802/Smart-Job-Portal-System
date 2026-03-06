@@ -70,7 +70,7 @@ public class AdminService {
         String user_role=role.substring(5);
         Users user=usersRepo.findById(id).orElseThrow(()-> new NotFoundException(user_role+" ID",id));
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success",role.substring(5)+" details fetched Successfully",
-                new UserDTO(user.getUserId(),user.getUsername(),user.getEmail(), user.getRole().substring(5))));
+                new UserDTO(user.getUserId(),user.getUsername(),user.getEmail(), user.getRole().substring(5),user.getMobNumber())));
     }
 
     //get user by username and role
@@ -79,7 +79,7 @@ public class AdminService {
         Users user=usersRepo.findByUsername(username).orElseThrow(()-> new NameNotFoundException("Username",username));
 
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success",user_role+" details fetched Successfully",
-                new UserDTO(user.getUserId(),user.getUsername(),user.getEmail(), user.getRole().substring(5))));
+                new UserDTO(user.getUserId(),user.getUsername(),user.getEmail(), user.getRole().substring(5),user.getMobNumber())));
     }
 
     //get application count per job
