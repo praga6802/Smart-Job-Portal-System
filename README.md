@@ -50,7 +50,7 @@ A **Spring Boot based backend application** that provides a platform for managin
 
 ## 👨‍💻 Author
 
-**Pragadeeswaran S**
+**Pragadeeswaran Sekar**
 
 Aspiring **Java Backend Developer** passionate about building secure and scalable applications using **Spring Boot and REST APIs**.
 
