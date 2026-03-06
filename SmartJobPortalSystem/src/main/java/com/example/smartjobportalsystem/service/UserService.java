@@ -20,10 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -132,15 +129,31 @@ public class UserService {
 
 
         //create folder for uploading resume
-        String dirPath="uploads/";
+        String dirPath="uploads/resume/"+user.getUserId()+"/";
         File dir=new File(dirPath);
         if(!dir.exists()){
             dir.mkdirs();
         }
 
+        //check if the user has already a resume
+        Optional<ResumeEntity> existingResume = resumeRepository.findByUser(user);
+        if(existingResume.isPresent()){
+            String path=existingResume.get().getFilePath();
+            if (path != null) {
+                Path oldPath = Paths.get(existingResume.get().getFilePath());
+                Files.deleteIfExists(oldPath);
+            }
+            resumeRepository.delete(existingResume.get());
+        }
+
+
         //creating file name
         String reqFileName=file.getOriginalFilename();
-        String extension= Objects.requireNonNull(reqFileName).substring(reqFileName.indexOf("."));
+        if(reqFileName == null || !reqFileName.contains(".")){
+            return ResponseEntity.badRequest().body(new ApiResponse(LocalDateTime.now(),"Failure","Invalid file name"));
+        }
+
+        String extension= Objects.requireNonNull(reqFileName).substring(reqFileName.lastIndexOf("."));
         String fileName=user.getUsername()+"_"+ LocalDate.now()+extension;
 
         //creating file path
@@ -159,73 +172,75 @@ public class UserService {
 
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Resume uploaded Successfully"));
     }
-//
+
 //    //delete resume
-//    public ResponseEntity<?> deleteResume(String email) {
-//        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
-//
-//        String resumePath=user.getResumePath();
-//
-//        if(resumePath==null || resumePath.isEmpty()){
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiResponse(LocalDateTime.now(),"Failure","No resume found"));
-//        }
-//
-//        Path path=Paths.get(resumePath);
-//        try{
-//            //delete file
-//            Files.deleteIfExists(path);
-//
-//            //delete from db also
-//            user.setResumePath(null);
-//            usersRepo.save(user);
-//            return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Resume Deleted Successfully"));
-//        }
-//        catch (IOException e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
-//                    body(new ApiResponse(LocalDateTime.now(),"Failure","Error Deleting file"));
-//        }
-//    }
-//
+    public ResponseEntity<?> deleteResume(String email) {
+        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
+
+        ResumeEntity resume = resumeRepository.findByUser(user).orElseThrow(()-> new RuntimeException("No Resume found for "+user.getUsername()));
+        String resumePath=resume.getFilePath();
+
+        if (resumePath == null || resumePath.isEmpty()) {
+            resumeRepository.delete(resume);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(LocalDateTime.now(),"Failure","Resume record existed but file was missing. Record removed."));
+        }
+
+        Path path=Paths.get(resumePath);
+        try{
+            //delete file
+            Files.deleteIfExists(path);
+            resumeRepository.delete(resume);
+            return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Resume Deleted Successfully"));
+        }
+        catch (IOException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    body(new ApiResponse(LocalDateTime.now(),"Failure","Error Deleting file"));
+        }
+    }
+
+
 //    //view resume
-//    public ResponseEntity<?> viewResume(String email) throws IOException {
-//        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
-//
-//        String resumePath=user.getResumePath();
-//
-//        if(resumePath==null || resumePath.isEmpty()){
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiResponse(LocalDateTime.now(),"Failure","No resume found"));
-//        }
-//        Path path=Paths.get(resumePath);
-//        byte[] fileBytes=Files.readAllBytes(path);
-//
-//        HttpHeaders httpHeaders= new HttpHeaders();
-//        httpHeaders.setContentType(MediaType.APPLICATION_PDF);
-//        httpHeaders.setContentDisposition(ContentDisposition.inline()
-//                .filename(path.getFileName().toString())
-//                .build());
-//        return new ResponseEntity<>(fileBytes,httpHeaders,HttpStatus.OK);
-//    }
-//
-//    // download resume
-//    public ResponseEntity<?> downloadResume(String email) throws IOException {
-//        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
-//
-//        String resumePath = user.getResumePath();
-//
-//        if (resumePath == null || resumePath.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiResponse(LocalDateTime.now(), "Failure", "No resume found"));
-//        }
-//        Path path=Paths.get(resumePath);
-//        byte[] fileBytes=Files.readAllBytes(path);
-//
-//        HttpHeaders header= new HttpHeaders();
-//        header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//        header.setContentDisposition(ContentDisposition.attachment().filename(path.getFileName().toString()).build());
-//        return new ResponseEntity<>(fileBytes,header,HttpStatus.OK);
-//    }
+    public ResponseEntity<?> viewResume(String email) throws IOException {
+        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
+
+        ResumeEntity resume = resumeRepository.findByUser(user).orElseThrow(()-> new RuntimeException("Resume not found"));
+        String resumePath=resume.getFilePath();
+
+        if (resumePath == null || resumePath.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(LocalDateTime.now(),"Failure","No resume found for "+user.getUsername()));
+        }
+
+        Path path=Paths.get(resumePath);
+
+        byte[] fileBytes=Files.readAllBytes(path);
+
+        HttpHeaders httpHeaders= new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_PDF);
+        httpHeaders.setContentDisposition(ContentDisposition.inline().filename(path.getFileName().toString()).build());
+        return new ResponseEntity<>(fileBytes,httpHeaders,HttpStatus.OK);
+    }
+
+    // download resume
+    public ResponseEntity<?> downloadResume(String email) throws IOException {
+        Users user = usersRepo.findByEmail(email).orElseThrow(() -> new NameNotFoundException("Email ID", email));
+
+        ResumeEntity resume = resumeRepository.findByUser(user).orElseThrow(()-> new RuntimeException("Resume not found for "+user.getUsername()));
+        String resumePath=resume.getFilePath();
+        if (resumePath == null || resumePath.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(LocalDateTime.now(),"Failure","No resume found"));
+        }
+
+        Path path=Paths.get(resumePath);
+        byte[] fileBytes=Files.readAllBytes(path);
+
+        HttpHeaders header= new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        header.setContentDisposition(ContentDisposition.attachment().filename(path.getFileName().toString()).build());
+        return new ResponseEntity<>(fileBytes,header,HttpStatus.OK);
+    }
 
     //send the otp
     public ResponseEntity<?> verifyEmailAndSendCode(String logEmail, String email) {
@@ -277,7 +292,6 @@ public class UserService {
                         j.getJobLocation(), j.getJobType()))
                 .toList();
         return response;
-
     }
 }
 

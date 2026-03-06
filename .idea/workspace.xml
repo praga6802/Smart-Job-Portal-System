@@ -5,17 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d4f43ba-cabb-4a3e-b837-a045f2008cfd" name="Changes" comment="updated">
-      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/ResumeEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/ResumeRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CompanyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CompanyController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/JobApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/JobApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Users.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/JobApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/JobApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/Users.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/Users.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/Pragadeeswaran_2026-03-06.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/Pragadeeswaran_2026-03-06.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +66,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "myworkings",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/praga/OneDrive/Documents/Java Projects/travellers-choice",
+    "last_opened_file_path": "C:/Users/praga/OneDrive/Documents/Java Projects/SmartJobPortalSystem",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",

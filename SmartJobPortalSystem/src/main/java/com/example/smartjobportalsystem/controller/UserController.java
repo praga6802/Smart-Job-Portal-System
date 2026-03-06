@@ -29,7 +29,7 @@ public class UserController {
     }
 
     // view application status for job
-    @GetMapping("/viewApplicationStatus")
+    @GetMapping("/application-status")
     public ResponseEntity<?> viewApplicationStatus(@AuthenticationPrincipal UserDetails applicant) {
         String email = applicant.getUsername();
         return userService.viewApplicationStatus(email);
@@ -42,12 +42,14 @@ public class UserController {
         return ResponseEntity.ok(companyJobs);
     }
 
-    @GetMapping("/viewJobs")
+    @GetMapping("/viewAllJobs")
     public ResponseEntity<List<JobDTO>> getAllJobs() {
         List<JobDTO> allJobs = userService.viewAllJobs();
         return ResponseEntity.ok(allJobs);
     }
 
+
+    // ----------------------- EMAIL ---------------------------
     @PostMapping("/verifyEmail")
     public ResponseEntity<?> verifyEmailAndSendCode(@RequestBody EmailReqDTO emailDTO, @AuthenticationPrincipal UserDetails user) {
         String logEmail = user.getUsername();
@@ -60,34 +62,34 @@ public class UserController {
         return userService.verifyEmailCode(user, verify.getCode());
     }
 
-    // upload new resume
+
+    // ----------------------- RESUME ---------------------------
+    // upload resume
     @PostMapping("/uploadResume")
     public ResponseEntity<?> uploadResume(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal UserDetails user) throws IOException {
         String email = user.getUsername();
         return userService.uploadResume(file, email);
     }
 
+    //delete resume
+    @DeleteMapping("/deleteResume")
+    public ResponseEntity<?> deleteResume(@AuthenticationPrincipal UserDetails user) throws IOException {
+        String email=user.getUsername();
+        return userService.deleteResume(email);
+    }
 
-//
-//    //delete resume for the user
-//    @DeleteMapping("/deleteResume")
-//    public ResponseEntity<?> deleteResume(@AuthenticationPrincipal UserDetails user) throws IOException {
-//        String email=user.getUsername();
-//        return userService.deleteResume(email);
-//    }
-//
-//    //view resume
-//    @GetMapping("/viewResume")
-//    public ResponseEntity<?> viewResume(@AuthenticationPrincipal UserDetails user) throws Exception{
-//        String email=user.getUsername();
-//        return userService.viewResume(email);
-//    }
-//
-//    //download resume
-//    @GetMapping("/downloadResume")
-//    public ResponseEntity<?> downloadResume(@AuthenticationPrincipal UserDetails user) throws Exception{
-//        String email=user.getUsername();
-//        return userService.downloadResume(email);
-//    }
+  //view resume
+    @GetMapping("/viewResume")
+    public ResponseEntity<?> viewResume(@AuthenticationPrincipal UserDetails user) throws Exception{
+        String email=user.getUsername();
+        return userService.viewResume(email);
+    }
+
+    //download resume
+    @GetMapping("/downloadResume")
+    public ResponseEntity<?> downloadResume(@AuthenticationPrincipal UserDetails user) throws Exception{
+        String email=user.getUsername();
+        return userService.downloadResume(email);
+    }
 
 }
