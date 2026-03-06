@@ -26,6 +26,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
         return authService.registerUsers(registerDTO);
     }
+    
 
     //update for admin, user and company
     @PutMapping({"/admin/updateUser","/user/updateUser","/company/updateUser"})
