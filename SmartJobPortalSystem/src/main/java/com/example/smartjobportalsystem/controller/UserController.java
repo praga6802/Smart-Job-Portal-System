@@ -24,36 +24,50 @@ public class UserController {
 
     // apply for the job
     @PostMapping("/applyJob/{id}")
-    public ResponseEntity<?> applyJob(@PathVariable Integer id, Principal principal){
-        return userService.applyJob(id,principal.getName());
+    public ResponseEntity<?> applyJob(@PathVariable Integer id, Principal principal) {
+        return userService.applyJob(id, principal.getName());
     }
 
     // view application status for job
     @GetMapping("/viewApplicationStatus")
-    public ResponseEntity<?> viewApplicationStatus(@AuthenticationPrincipal UserDetails applicant){
-        String email=applicant.getUsername();
+    public ResponseEntity<?> viewApplicationStatus(@AuthenticationPrincipal UserDetails applicant) {
+        String email = applicant.getUsername();
         return userService.viewApplicationStatus(email);
     }
 
     // find the job by company name
     @GetMapping("/viewJobsByCompany/{companyName}")
-    public ResponseEntity<?> viewJobsByCompany(@PathVariable String companyName){
+    public ResponseEntity<?> viewJobsByCompany(@PathVariable String companyName) {
         List<JobDTO> companyJobs = userService.viewJobsByCompany(companyName);
         return ResponseEntity.ok(companyJobs);
     }
 
     @GetMapping("/viewJobs")
-    public ResponseEntity<List<JobDTO>> getAllJobs(){
-        List<JobDTO> allJobs= userService.viewAllJobs();
+    public ResponseEntity<List<JobDTO>> getAllJobs() {
+        List<JobDTO> allJobs = userService.viewAllJobs();
         return ResponseEntity.ok(allJobs);
     }
 
-    //upload new resume
-//    @PostMapping("/uploadResume")
-//    public ResponseEntity<?> uploadResume(@RequestParam MultipartFile file, @AuthenticationPrincipal UserDetails user) throws IOException {
-//        String email=user.getUsername();
-//        return userService.uploadResume(file,email);
-//    }
+    @PostMapping("/verifyEmail")
+    public ResponseEntity<?> verifyEmailAndSendCode(@RequestBody EmailReqDTO emailDTO, @AuthenticationPrincipal UserDetails user) {
+        String logEmail = user.getUsername();
+        String mail = emailDTO.getEmail();
+        return userService.verifyEmailAndSendCode(logEmail, mail);
+    }
+
+    @PostMapping("/verifyEmailCode")
+    public ResponseEntity<?> verifyEmailCode(@RequestBody EmailVerificationDTO verify, @AuthenticationPrincipal UserDetails user) {
+        return userService.verifyEmailCode(user, verify.getCode());
+    }
+
+    // upload new resume
+    @PostMapping("/uploadResume")
+    public ResponseEntity<?> uploadResume(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal UserDetails user) throws IOException {
+        String email = user.getUsername();
+        return userService.uploadResume(file, email);
+    }
+
+
 //
 //    //delete resume for the user
 //    @DeleteMapping("/deleteResume")
@@ -76,15 +90,4 @@ public class UserController {
 //        return userService.downloadResume(email);
 //    }
 
-    @PostMapping("/verifyEmail")
-    public ResponseEntity<?> verifyEmailAndSendCode(@RequestBody EmailReqDTO emailDTO, @AuthenticationPrincipal UserDetails user){
-        String logEmail=user.getUsername();
-        String mail=emailDTO.getEmail();
-        return userService.verifyEmailAndSendCode(logEmail,mail);
-    }
-
-    @PostMapping("/verifyEmailCode")
-    public ResponseEntity<?> verifyEmailCode(@RequestBody EmailVerificationDTO verify, @AuthenticationPrincipal UserDetails user){
-        return userService.verifyEmailCode(user, verify.getCode());
-    }
 }

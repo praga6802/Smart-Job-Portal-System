@@ -1,17 +1,11 @@
 package com.example.smartjobportalsystem.service;
 
 import com.example.smartjobportalsystem.dto.*;
-import com.example.smartjobportalsystem.entity.Job;
-import com.example.smartjobportalsystem.entity.JobApplication;
-import com.example.smartjobportalsystem.entity.Users;
-import com.example.smartjobportalsystem.entity.VerificationTable;
+import com.example.smartjobportalsystem.entity.*;
 import com.example.smartjobportalsystem.exception.NameNotFoundException;
 import com.example.smartjobportalsystem.exception.NotFoundException;
 import com.example.smartjobportalsystem.exception.UnAuthorizedException;
-import com.example.smartjobportalsystem.repository.JobApplicationRepo;
-import com.example.smartjobportalsystem.repository.JobRepo;
-import com.example.smartjobportalsystem.repository.UsersRepo;
-import com.example.smartjobportalsystem.repository.VerificationRepo;
+import com.example.smartjobportalsystem.repository.*;
 import io.jsonwebtoken.Header;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -35,24 +29,29 @@ import java.util.UUID;
 public class UserService {
 
     @Autowired
-    UsersRepo usersRepo;
+    private UsersRepo usersRepo;
 
     @Autowired
-    JobRepo jobRepo;
+    private JobRepo jobRepo;
 
     @Autowired
-    JobApplicationRepo jobApplicationRepo;
+    private ResumeRepository resumeRepository;
 
     @Autowired
-    EmailService emailService;
+    private JobApplicationRepo jobApplicationRepo;
 
     @Autowired
-    VerificationRepo verificationRepo;
+    private EmailService emailService;
+
+    @Autowired
+    private VerificationRepo verificationRepo;
 
     //apply job for the company
     public ResponseEntity<?> applyJob(Integer jobId, String email) {
         Users applicant=usersRepo.findByEmail(email).orElseThrow(()-> new NameNotFoundException("Email",email));
         Job job=jobRepo.findById(jobId).orElseThrow(()-> new NotFoundException("Job ID",jobId));
+
+        ResumeEntity resume = resumeRepository.findByUser(applicant).orElseThrow(()-> new RuntimeException("Resume is mandatory for applying this job"));
 
         List<Job> rejectedJobs=jobRepo.findByStatus("REJECTED");
         boolean isRejected=rejectedJobs.stream().anyMatch(j->j.getJobId().equals(jobId));
@@ -69,6 +68,8 @@ public class UserService {
         jobApplication.setJob(job);
         jobApplication.setStatus("APPLIED");
         jobApplication.setAppliedAt(LocalDateTime.now());
+        jobApplication.setResume(resume);
+
         jobApplicationRepo.save(jobApplication);
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Applied Successfully"));
     }
@@ -106,55 +107,58 @@ public class UserService {
         }
 
         //upload resume
-//    public ResponseEntity<?> uploadResume(MultipartFile file, String email) throws IOException {
-//        //validating the user
-//        Users user=usersRepo.findByEmail(email).orElseThrow(()-> new NameNotFoundException("Email ID",email));
-//
-//
-//        //check if the file type mismatch
-//        String fileType = file.getContentType();
-//        if (!("application/pdf".equals(fileType) || "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equals(fileType))) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(new ApiResponse(LocalDateTime.now(), "Failure", "Only PDF or DOCX files are allowed"));
-//        }
-//
-//        //check if the content is not empty
-//        if(file.isEmpty()){
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-//                    body(new ApiResponse(LocalDateTime.now(),"Failure","File cannot be empty"));
-//        }
-//
-//
-//        //validating the user
-//        if(!"ROLE_USER".equalsIgnoreCase(user.getRole())){
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).
-//                    body(new ApiResponse(LocalDateTime.now(),"Failure","Only Job Seekers can upload their resume."));
-//        }
-//
-//
-//        //create folder for uploading resume
-//        String dirPath="uploads/";
-//        File dir=new File(dirPath);
-//        if(!dir.exists()){
-//            dir.mkdirs();
-//        }
-//
-//        //creating file name
-//        String orgFileName=file.getOriginalFilename();
-//        String extension= Objects.requireNonNull(orgFileName).substring(orgFileName.indexOf("."));
-//        String fileName=user.getUsername()+"_"+ LocalDate.now()+extension;
-//
-//        //creating file path
-//        Path filePath= Paths.get(dirPath + fileName);
-//
-//        //writing file content into file path
-//        Files.write(filePath,file.getBytes());
-//
-//        //save file path for the user role only
-//        user.setResumePath(filePath.toString());
-//        usersRepo.save(user);
-//        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Resume has been uploaded Successfully"));
-//    }
+    public ResponseEntity<?> uploadResume(MultipartFile file, String email) throws IOException {
+        //validating the user
+        Users user=usersRepo.findByEmail(email).orElseThrow(()-> new NameNotFoundException("Email ID",email));
+
+        //check if the file type mismatch
+        String fileType = file.getContentType();
+        if (!("application/pdf".equals(fileType) || "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equals(fileType))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(LocalDateTime.now(), "Failure", "Only PDF or DOCX files are allowed"));
+        }
+
+        //check if the content is not empty
+        if(file.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
+                    body(new ApiResponse(LocalDateTime.now(),"Failure","File cannot be empty"));
+        }
+
+        //validating the user
+        if(!"ROLE_USER".equalsIgnoreCase(user.getRole())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).
+                    body(new ApiResponse(LocalDateTime.now(),"Failure","Only Job Seekers can upload their resume."));
+        }
+
+
+        //create folder for uploading resume
+        String dirPath="uploads/";
+        File dir=new File(dirPath);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+
+        //creating file name
+        String reqFileName=file.getOriginalFilename();
+        String extension= Objects.requireNonNull(reqFileName).substring(reqFileName.indexOf("."));
+        String fileName=user.getUsername()+"_"+ LocalDate.now()+extension;
+
+        //creating file path
+        Path filePath= Paths.get(dirPath + fileName);
+
+        //writing file content into file path
+        Files.write(filePath,file.getBytes());
+
+        //save file path for the user role only
+        ResumeEntity resume=new ResumeEntity();
+        resume.setFileName(fileName);
+        resume.setFilePath(filePath.toString());
+        resume.setUser(user);
+
+        resumeRepository.save(resume);
+
+        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Resume uploaded Successfully"));
+    }
 //
 //    //delete resume
 //    public ResponseEntity<?> deleteResume(String email) {
