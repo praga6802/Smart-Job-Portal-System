@@ -13,6 +13,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -24,8 +25,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -46,18 +51,34 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager(), jwtUtil, objectMapper());
         JWTValidationFilter jwtValidationFilter = new JWTValidationFilter(authenticationManager());
-        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/register","/auth/login","/auth/test").permitAll()
+        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/signup","/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                     .requestMatchers("/auth/user/**").hasRole("USER")
                     .requestMatchers("/auth/admin/**").hasRole("ADMIN")
                     .requestMatchers("/auth/company/**").hasRole("COMPANY")
                     .anyRequest().authenticated())
                 .csrf(c->c.disable())
+                .cors(cors->{})
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtValidationFilter, JWTAuthenticationFilter.class)
                 .build();
     }
 
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5500"));
+        corsConfiguration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**",corsConfiguration);
+
+        return source;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
