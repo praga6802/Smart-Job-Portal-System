@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
@@ -51,9 +52,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, Authentication authentication) throws IOException {
 
-        String token = jwtUtil.generateToken(authentication.getName());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String token = jwtUtil.generateToken(userDetails);
+        String role=userDetails.getAuthorities().iterator().next().getAuthority();
 
-        JWTResponseDTO jwtResponseDTO= new JWTResponseDTO(LocalDateTime.now(), "200","Login Successful",token);
+        JWTResponseDTO jwtResponseDTO= new JWTResponseDTO(LocalDateTime.now(), "200","Login Successful",token,role);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         objectMapper.writeValue(response.getOutputStream(),jwtResponseDTO);

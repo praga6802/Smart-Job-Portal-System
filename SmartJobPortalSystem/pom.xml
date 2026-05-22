@@ -12,6 +12,7 @@
 	<artifactId>SmartJobPortalSystem</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SmartJobPortalSystem</name>
+	<packaging>jar</packaging>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -102,6 +103,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>smart-job-portal</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

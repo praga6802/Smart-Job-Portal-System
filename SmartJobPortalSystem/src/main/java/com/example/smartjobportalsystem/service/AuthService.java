@@ -6,6 +6,7 @@ import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.exception.AlreadyExistsException;
 import com.example.smartjobportalsystem.exception.NameNotFoundException;
 import com.example.smartjobportalsystem.exception.NotFoundException;
+import com.example.smartjobportalsystem.exception.UnAuthorizedException;
 import com.example.smartjobportalsystem.repository.UsersRepo;
 import com.example.smartjobportalsystem.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -66,6 +70,22 @@ public class AuthService {
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", "Sign Up Successfully"));
     }
 
+    //login user
+    public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String jwtToken = jwtUtil.generateToken(userDetails);
+
+        Users user = usersRepo.findByEmail(loginRequest.getEmail()).orElseThrow(()-> new UnAuthorizedException("User Email",loginRequest.getEmail()));
+        System.out.println("Role"+user.getRole());
+        LoginResponse response = new LoginResponse(jwtToken,user.getRole());
+        return ResponseEntity.ok(response);
+    }
+
+
+
     //update user or admin or company
     public ResponseEntity<?> updateUser(UpdateUserDTO user, String existingEmail) {
 
@@ -108,8 +128,12 @@ public class AuthService {
             updateResult.put("Role:", roleUpdated ? existingUser.getRole() : "Unchanged");
         }
 
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
         if (emailUpdated) {
-            String newToken = jwtUtil.generateToken(existingUser.getEmail());
+            String newToken = jwtUtil.generateToken(userDetails);
             return ResponseEntity.ok(Map.of(
                     "LocalTime",LocalDateTime.now(),
                     "Status","Success",
@@ -157,4 +181,6 @@ public class AuthService {
         usersRepo.save(user);
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Your password has been reset successfully..You are set to login"));
     }
+
+
 }

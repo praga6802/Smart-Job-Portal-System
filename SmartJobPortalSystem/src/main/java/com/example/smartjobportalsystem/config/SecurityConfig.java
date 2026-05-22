@@ -46,7 +46,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager(), jwtUtil, objectMapper());
         JWTValidationFilter jwtValidationFilter = new JWTValidationFilter(authenticationManager());
-        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/register","/auth/login").permitAll()
+        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/register","/auth/login","/auth/test").permitAll()
                     .requestMatchers("/auth/user/**").hasRole("USER")
                     .requestMatchers("/auth/admin/**").hasRole("ADMIN")
                     .requestMatchers("/auth/company/**").hasRole("COMPANY")

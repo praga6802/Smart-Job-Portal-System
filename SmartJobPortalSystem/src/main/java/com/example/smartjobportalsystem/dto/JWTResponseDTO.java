@@ -13,11 +13,13 @@ public class JWTResponseDTO {
     private String statusCode;
     private String message;
     private String token;
+    private String role;
 
-    public JWTResponseDTO(LocalDateTime timestamp, String statusCode, String message, String token) {
+    public JWTResponseDTO(LocalDateTime timestamp, String statusCode, String message, String token, String role) {
         this.timestamp = timestamp;
         this.statusCode = statusCode;
         this.message = message;
         this.token = token;
+        this.role=role;
     }
 }

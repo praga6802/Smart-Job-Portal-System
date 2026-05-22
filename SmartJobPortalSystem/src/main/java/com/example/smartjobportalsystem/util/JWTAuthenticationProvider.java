@@ -34,7 +34,7 @@ public class JWTAuthenticationProvider implements AuthenticationProvider {
         }
 
         if (username == null) {
-            throw new BadCredentialsException("Invalid JWT Token");
+            throw new BadCredentialsException("User name not given. Invalid JWT Token");
         }
         UserDetails userDetails=userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());

@@ -1,10 +1,7 @@
 package com.example.smartjobportalsystem.controller;
 
 
-import com.example.smartjobportalsystem.dto.ForgotPasswordDTO;
-import com.example.smartjobportalsystem.dto.LoginUserDTO;
-import com.example.smartjobportalsystem.dto.RegisterDTO;
-import com.example.smartjobportalsystem.dto.UpdateUserDTO;
+import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,11 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
         return authService.registerUsers(registerDTO);
     }
-    
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+        return authService.login(loginRequest);
+    }
 
     //update for admin, user and company
     @PutMapping({"/admin/updateUser","/user/updateUser","/company/updateUser"})
@@ -41,6 +42,11 @@ public class AuthController {
         String p1=password.getPassword();
         String p2= password.getReEnterPassword();;
         return authService.forgotPassword(p1,p2,email);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<LoginResponse> test(){
+        return ResponseEntity.ok(new LoginResponse("ABC","admin"));
     }
 
 }
