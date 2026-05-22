@@ -1,19 +1,36 @@
 package com.example.smartjobportalsystem.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
+@NoArgsConstructor
 public class LoginResponse {
 
-    private ApiResponse apiResponse;
     private String token;
+    private String role;
 
+    public LoginResponse(String token, String role) {
+        this.token = token;
+        this.role = role;
+    }
 
-    public LoginResponse(ApiResponse apiResponse, String token) {
-      this.apiResponse=apiResponse;
-      this.token=token;
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
