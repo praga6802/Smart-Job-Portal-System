@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:5500")
 public class AuthController {
 
     @Autowired
     AuthService authService;
 
     //register for admin, user and company
-    @PostMapping("/register")
+    @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
         return authService.registerUsers(registerDTO);
     }
