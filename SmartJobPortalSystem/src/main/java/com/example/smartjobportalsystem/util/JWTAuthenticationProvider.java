@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class JWTAuthenticationProvider implements AuthenticationProvider {
 
@@ -24,18 +25,10 @@ public class JWTAuthenticationProvider implements AuthenticationProvider {
         String token =((JWTAuthenticationToken)authentication).getToken();
 
         if(token==null || token.isEmpty()){
-            return null;
+            throw new UsernameNotFoundException("JWT Token not found");
         }
-        String username;
-        try {
-            username = jwtUtil.extractUserNameFromToken(token);
-        } catch (Exception e) {
-            throw new BadCredentialsException("Invalid JWT Token");
-        }
+        String username=jwtUtil.extractUserNameFromToken(token);
 
-        if (username == null) {
-            throw new BadCredentialsException("User name not given. Invalid JWT Token");
-        }
         UserDetails userDetails=userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
 

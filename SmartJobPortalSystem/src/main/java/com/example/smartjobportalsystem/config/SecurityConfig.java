@@ -4,6 +4,7 @@ package com.example.smartjobportalsystem.config;
 import com.example.smartjobportalsystem.filter.JWTAuthenticationFilter;
 import com.example.smartjobportalsystem.filter.JWTValidationFilter;
 import com.example.smartjobportalsystem.service.CustomUserDetailsService;
+import com.example.smartjobportalsystem.service.RefreshTokenService;
 import com.example.smartjobportalsystem.util.JWTAuthenticationEntryPoint;
 import com.example.smartjobportalsystem.util.JWTAuthenticationProvider;
 import com.example.smartjobportalsystem.util.JwtUtil;
@@ -44,14 +45,15 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
     }
-
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     //FILTER CHAINS
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager(), jwtUtil, objectMapper());
+        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager(), jwtUtil, objectMapper(),refreshTokenService);
         JWTValidationFilter jwtValidationFilter = new JWTValidationFilter(authenticationManager());
-        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/signup","/auth/login").permitAll()
+        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/signup","/auth/login", "/auth/refreshToken").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                     .requestMatchers("/auth/user/**").hasRole("USER")
                     .requestMatchers("/auth/admin/**").hasRole("ADMIN")

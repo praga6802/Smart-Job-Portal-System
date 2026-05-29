@@ -2,6 +2,8 @@ package com.example.smartjobportalsystem.filter;
 
 import com.example.smartjobportalsystem.dto.JWTResponseDTO;
 import com.example.smartjobportalsystem.dto.LoginRequest;
+import com.example.smartjobportalsystem.entity.RefreshToken;
+import com.example.smartjobportalsystem.service.RefreshTokenService;
 import com.example.smartjobportalsystem.util.JwtUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,10 +31,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
+    private RefreshTokenService refreshTokenService;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, ObjectMapper objectMapper) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, ObjectMapper objectMapper,RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.refreshTokenService=refreshTokenService;
         this.objectMapper = objectMapper;
         setFilterProcessesUrl("/auth/login");
     }
@@ -50,13 +54,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, Authentication authentication) throws IOException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                            FilterChain filterChain, Authentication authentication) throws IOException {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(userDetails);
-        String role=userDetails.getAuthorities().iterator().next().getAuthority();
 
-        JWTResponseDTO jwtResponseDTO= new JWTResponseDTO(LocalDateTime.now(), "200","Login Successful",token,role);
+        String token = jwtUtil.generateToken(userDetails); // jwt token
+        String role=userDetails.getAuthorities().iterator().next().getAuthority(); //role
+        RefreshToken refreshToken= refreshTokenService.createRefreshToken(userDetails.getUsername()); // refresh token
+
+        JWTResponseDTO jwtResponseDTO= new JWTResponseDTO(LocalDateTime.now(),"Login Successfully",role,token,refreshToken.getToken());
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         objectMapper.writeValue(response.getOutputStream(),jwtResponseDTO);

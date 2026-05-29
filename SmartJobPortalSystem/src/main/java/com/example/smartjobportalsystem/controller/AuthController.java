@@ -2,14 +2,20 @@ package com.example.smartjobportalsystem.controller;
 
 
 import com.example.smartjobportalsystem.dto.*;
+import com.example.smartjobportalsystem.entity.RefreshToken;
 import com.example.smartjobportalsystem.entity.Users;
+import com.example.smartjobportalsystem.exception.NotFoundException;
 import com.example.smartjobportalsystem.service.AuthService;
+import com.example.smartjobportalsystem.service.RefreshTokenService;
+import com.example.smartjobportalsystem.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,6 +24,12 @@ public class AuthController {
 
     @Autowired
     AuthService authService;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     //register for admin, user and company
     @PostMapping("/signup")
@@ -45,9 +57,21 @@ public class AuthController {
         return authService.forgotPassword(p1,p2,email);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<LoginResponse> test(){
-        return ResponseEntity.ok(new LoginResponse("ABC","admin"));
+
+    @PostMapping("/refreshToken")
+    public JWTResponseDTO getRefreshToken(@RequestBody RefreshTokenRequest request){
+       return refreshTokenService.findByToken(request.getToken())
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUserInfo)
+                .map(user->{
+                    String jwtToken=jwtUtil.generateToken(user);
+                    return JWTResponseDTO.builder()
+                            .timestamp(LocalDateTime.now())
+                            .message("Success")
+                            .token(jwtToken)
+                            .refreshToken(request.getToken())
+                            .build();
+                }).orElseThrow(()->new NotFoundException("Refresh Token not found"));
     }
 
 }

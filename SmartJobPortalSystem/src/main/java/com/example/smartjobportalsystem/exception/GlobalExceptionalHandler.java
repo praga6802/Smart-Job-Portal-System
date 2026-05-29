@@ -46,4 +46,11 @@ public class GlobalExceptionalHandler {
     }
 
 
+    @ExceptionHandler(InvalidLoginRequestException.class)
+    public ResponseEntity<ApiResponse> handleInvalidLoginRequestException(InvalidLoginRequestException exception){
+        ApiResponse apiResponse =new ApiResponse(LocalDateTime.now(),"Invalid Login request Payload",exception.getMessage());
+        return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
+    }
+
+
 }
