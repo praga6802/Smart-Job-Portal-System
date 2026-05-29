@@ -2,6 +2,7 @@ package com.example.smartjobportalsystem.service;
 
 
 import com.example.smartjobportalsystem.dto.*;
+import com.example.smartjobportalsystem.entity.RefreshToken;
 import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.exception.AlreadyExistsException;
 import com.example.smartjobportalsystem.exception.NameNotFoundException;
@@ -41,6 +42,9 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
 
 
     //registers user or admin or company
@@ -77,10 +81,10 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String jwtToken = jwtUtil.generateToken(userDetails);
+        RefreshToken refreshToken=refreshTokenService.createRefreshToken(userDetails.getUsername());
 
         Users user = usersRepo.findByEmail(loginRequest.getEmail()).orElseThrow(()-> new UnAuthorizedException("User Email",loginRequest.getEmail()));
-        System.out.println("Role"+user.getRole());
-        LoginResponse response = new LoginResponse(jwtToken,user.getRole());
+        LoginResponse response = new LoginResponse(jwtToken,user.getRole(),refreshToken);
         return ResponseEntity.ok(response);
     }
 
