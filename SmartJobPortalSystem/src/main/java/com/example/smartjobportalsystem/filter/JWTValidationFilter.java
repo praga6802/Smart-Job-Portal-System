@@ -26,7 +26,7 @@ public class JWTValidationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String path=request.getServletPath();
-        if(path.equals("/auth/signup") || (path.equals("/auth/login"))){
+        if(path.equals("/auth/signup") || (path.equals("/auth/login")) ||path.equals("/auth/refreshToken")){
             filterChain.doFilter(request,response);
             return;
         }
