@@ -1,67 +1,57 @@
 package com.example.smartjobportalsystem.filter;
 
-import com.example.smartjobportalsystem.util.JWTAuthenticationToken;
+
+import com.example.smartjobportalsystem.service.JWTService;
+import com.example.smartjobportalsystem.service.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
 public class JWTValidationFilter extends OncePerRequestFilter {
 
-    private final AuthenticationManager authenticationManager;
+    @Autowired
+    private JWTService jwtService;
 
-    public JWTValidationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
-
-
+    @Autowired
+    private ApplicationContext context;
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String authHeader=request.getHeader("Authorization");
+        String token="";
+        String username="";
 
         String path=request.getServletPath();
-        if(path.equals("/auth/signup") || (path.equals("/auth/login")) ||path.equals("/auth/refreshToken")){
+        if(path.equals("/auth/register") || path.equals("/auth/login")){
             filterChain.doFilter(request,response);
             return;
         }
 
-        String token=extractJWTToken(request);
-        if(token!=null) {
-            try {
-                JWTAuthenticationToken jwtAuthenticationToken = new JWTAuthenticationToken(token);
-                Authentication authResult = authenticationManager.authenticate(jwtAuthenticationToken);
+        if(authHeader!=null && authHeader.startsWith("Bearer ")){
+            token =authHeader.substring(7);
+            username=jwtService.extractUsername(token);
 
-                if (authResult.isAuthenticated()) {
-                    SecurityContextHolder.getContext().setAuthentication(authResult);
+            if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
+                UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(username);
+
+                if(jwtService.validateToken(token,userDetails)){
+                    UsernamePasswordAuthenticationToken authToken= new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"error\":\"Invalid JWT token\"}");
-                return;
             }
         }
-        else{
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\":\"Missing JWT token\"}");
-            return;
-        }
         filterChain.doFilter(request,response);
-    }
-
-
-    public String extractJWTToken(HttpServletRequest request){
-        String token=request.getHeader("Authorization");
-        if(token!=null && token.startsWith("Bearer ")){
-            return token.substring(7);
-        }
-        return null;
     }
 }

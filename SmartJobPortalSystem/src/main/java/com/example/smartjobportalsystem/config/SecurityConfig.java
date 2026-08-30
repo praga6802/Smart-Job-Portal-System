@@ -1,23 +1,17 @@
 package com.example.smartjobportalsystem.config;
 
 
-import com.example.smartjobportalsystem.filter.JWTAuthenticationFilter;
 import com.example.smartjobportalsystem.filter.JWTValidationFilter;
-import com.example.smartjobportalsystem.service.CustomUserDetailsService;
+import com.example.smartjobportalsystem.service.MyUserDetailsService;
 import com.example.smartjobportalsystem.service.RefreshTokenService;
-import com.example.smartjobportalsystem.util.JWTAuthenticationEntryPoint;
-import com.example.smartjobportalsystem.util.JWTAuthenticationProvider;
-import com.example.smartjobportalsystem.util.JwtUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -30,7 +24,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -38,22 +31,22 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-   private final CustomUserDetailsService userDetailsService;
-   private final JwtUtil jwtUtil;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtUtil jwtUtil) {
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
-    }
     @Autowired
     private RefreshTokenService refreshTokenService;
+
+    @Autowired
+    private MyUserDetailsService userDetailsService;
+
+    @Autowired
+    private JWTValidationFilter jwtValidationFilter;
 
     //FILTER CHAINS
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager(), jwtUtil, objectMapper(),refreshTokenService);
-        JWTValidationFilter jwtValidationFilter = new JWTValidationFilter(authenticationManager());
-        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/signup","/auth/login", "/auth/refreshToken").permitAll()
+
+        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/company/register","/auth/candidate/register",
+                                "/auth/admin/register","/auth/login").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                     .requestMatchers("/auth/user/**").hasRole("USER")
                     .requestMatchers("/auth/admin/**").hasRole("ADMIN")
@@ -62,8 +55,7 @@ public class SecurityConfig {
                 .csrf(c->c.disable())
                 .cors(cors->{})
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(jwtValidationFilter, JWTAuthenticationFilter.class)
+                .addFilterBefore(jwtValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -78,7 +70,6 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",corsConfiguration);
-
         return source;
     }
 
@@ -90,29 +81,15 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
-        DaoAuthenticationProvider dao= new DaoAuthenticationProvider();
-        dao.setUserDetailsService(userDetailsService);
+        DaoAuthenticationProvider dao= new DaoAuthenticationProvider(userDetailsService);
         dao.setPasswordEncoder(passwordEncoder());
         return dao;
     }
 
-    @Bean
-    public JWTAuthenticationProvider jwtAuthenticationProvider(){
-        return new JWTAuthenticationProvider(jwtUtil,userDetailsService);
-    }
 
     @Bean
-    public AuthenticationManager authenticationManager() throws Exception{
-        return new ProviderManager(Arrays.asList(daoAuthenticationProvider(),jwtAuthenticationProvider()));
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+        return configuration.getAuthenticationManager();
     }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        return mapper;
-    }
-
 
 }

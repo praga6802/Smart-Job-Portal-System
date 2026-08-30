@@ -22,7 +22,6 @@ public class ApiResponse {
         this.timestamp = timestamp;
     }
 
-
     public ApiResponse(LocalDateTime timestamp, String message, String details, UserDTO userDTO) {
         this.timestamp = timestamp;
         this.message = message;

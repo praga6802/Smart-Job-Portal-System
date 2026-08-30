@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterDTO {
+public class AdminRegisterDTO {
 
-    private String username;
+    private String firstname;
+    private String lastname;
     private String email;
+    private String contact;
     private String password;
-    private String role;
-    private String mobNumber;
-
-
 }

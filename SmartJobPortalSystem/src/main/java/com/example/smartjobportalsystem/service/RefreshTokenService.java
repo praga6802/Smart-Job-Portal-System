@@ -5,7 +5,7 @@ import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.exception.NameNotFoundException;
 import com.example.smartjobportalsystem.exception.NotFoundException;
 import com.example.smartjobportalsystem.repository.RefreshTokenRepo;
-import com.example.smartjobportalsystem.repository.UsersRepo;
+import com.example.smartjobportalsystem.repository.UsersRepository;
 import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -22,7 +22,7 @@ public class RefreshTokenService {
     private RefreshTokenRepo refreshTokenRepo;
 
     @Autowired
-    private UsersRepo usersRepo;
+    private UsersRepository usersRepo;
 
     public RefreshToken createRefreshToken(String email){
 
