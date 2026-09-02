@@ -26,6 +26,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+        System.out.println("login request: "+loginRequest.getEmail()+"password: "+loginRequest.getPassword());
         return authService.login(loginRequest);
     }
 
@@ -34,11 +35,6 @@ public class AuthController {
         return authService.logout();
     }
 
-//    @PutMapping({"/admin/updateUser","/user/updateUser","/company/updateUser"})
-//    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO user){
-//        String existingEmail= SecurityContextHolder.getContext().getAuthentication().getName();
-//        return authService.updateUser(user,existingEmail);
-//    }
 
 //    @PutMapping("/forgotPassword")
 //    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDTO password, @AuthenticationPrincipal UserDetails user){

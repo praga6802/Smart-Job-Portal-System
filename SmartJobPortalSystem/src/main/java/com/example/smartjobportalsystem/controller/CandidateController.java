@@ -2,10 +2,12 @@ package com.example.smartjobportalsystem.controller;
 
 
 import com.example.smartjobportalsystem.dto.*;
+import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,11 +26,12 @@ public class CandidateController {
     }
 
     @PutMapping("/update")
-    public  ResponseEntity<?> updateCandidate(Authentication authentication, @RequestBody CandidateRegisterDTO candidate){
-        String currentCandidate =authentication.getName();
-        return candidateService.updateCandidate(currentCandidate,candidate);
+    public  ResponseEntity<?> updateCandidate(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody CandidateRegisterDTO candidate){
+        return candidateService.updateCandidate(userDetails.getUserId(),candidate);
     }
 
+
+    //  ---- JOB FEATURES --------
 //    // apply
 //    @PostMapping("/applyJob/{id}")
 //    public ResponseEntity<?> applyJob(@PathVariable Integer id, Principal principal) {

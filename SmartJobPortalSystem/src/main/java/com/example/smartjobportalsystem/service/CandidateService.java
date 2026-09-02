@@ -8,6 +8,7 @@ import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.exception.NotFoundException;
 import com.example.smartjobportalsystem.repository.CandidateRepository;
 import com.example.smartjobportalsystem.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +49,7 @@ public class CandidateService {
         Users user= new Users();
         user.setEmail(candidate.getEmail());
         user.setPassword(passwordEncoder.encode(candidate.getPassword()));
-        user.setRole("ROLE_USER");
+        user.setRole("CANDIDATE");
         usersRepository.save(user);
 
 
@@ -68,12 +69,16 @@ public class CandidateService {
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Registration Successfully"));
     }
 
-    public ResponseEntity<?> updateCandidate(String email,CandidateRegisterDTO candidate) {
+
+    // update Canidate Details
+    @Transactional
+    public ResponseEntity<?> updateCandidate(Integer candidateId,CandidateRegisterDTO candidate) {
         List<String> updatedFields= new ArrayList<>();
         String newToken=null;
 
-        Candidate cand = candidateRepository.findByEmail(email).orElseThrow(()-> new NotFoundException("Candidate not found with email "+email));
-        Users user = usersRepository.findByEmail(email).orElseThrow(()-> new NotFoundException("User not found with email "+email));
+        Users user = usersRepository.findById(candidateId).orElseThrow(()-> new NotFoundException("User not found!"));
+        Candidate cand = candidateRepository.findByUserUserId(candidateId).orElseThrow(()-> new NotFoundException("Candidate not found!"));
+
 
         if(candidate.getFirstname()!=null && !candidate.getFirstname().trim().isEmpty()){
             cand.setFirstname(candidate.getFirstname());
@@ -84,8 +89,8 @@ public class CandidateService {
             updatedFields.add("Last name");
         }
         if(candidate.getEmail()!=null && !candidate.getEmail().trim().isEmpty()){
-            if(candidate.getEmail().equalsIgnoreCase(email)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(),"Failure","Do not enter same Email"));
+            if(cand.getEmail().equals(candidate.getEmail())){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(),"Failure","Do not enter same email"));
             }
             if(candidateRepository.existsByEmail(candidate.getEmail()) || usersRepository.existsByEmail(candidate.getEmail())){
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","Email already taken!"));

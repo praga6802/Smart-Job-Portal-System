@@ -14,4 +14,6 @@ public interface CandidateRepository extends JpaRepository<Candidate,Integer> {
     boolean existsByContact(String contact);
 
     Optional<Candidate> findByEmail(String email);
+
+    Optional<Candidate> findByUserUserId(Integer candidateId);
 }

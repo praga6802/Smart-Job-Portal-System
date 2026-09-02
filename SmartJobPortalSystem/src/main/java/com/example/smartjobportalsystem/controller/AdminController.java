@@ -1,11 +1,15 @@
 package com.example.smartjobportalsystem.controller;
 
 import com.example.smartjobportalsystem.dto.*;
+import com.example.smartjobportalsystem.entity.Users;
+import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.service.AdminService;
 import com.example.smartjobportalsystem.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,107 +22,115 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
+    // register admin
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AdminRegisterDTO admin){
         return adminService.register(admin);
     }
 
 
+    // update admin
     @PutMapping("/update")
-    public ResponseEntity<?> updateAdmin(Authentication authentication, @RequestBody AdminRegisterDTO admin){
-        String email=authentication.getName();
-        return adminService.updateAdmin(email,admin);
+    public ResponseEntity<?> updateAdmin(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody AdminRegisterDTO admin){
+        return adminService.updateAdmin(userDetails.getUserId(),admin);
     }
 
-    // ADMIN
 
-    //delete admin by id
-//    @DeleteMapping("/delete/admin/{id}")
-//    public ResponseEntity<?> deleteAdminById(@PathVariable Integer id, @AuthenticationPrincipal UserDetails loggedInUser){
-//
-//        Users user=adminService.getUserById(id);
-//        String emailLogin=loggedInUser.getUsername();
-//
-//        if(user.getEmail().equals(emailLogin)){
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-//                    body(new ApiResponse(LocalDateTime.now(),"Failure","Admin cannot delete their own account"));
-//        }
-//        return adminService.deleteUserById(id,"ROLE_ADMIN");
-//    }
+    // get all Admins
+    @GetMapping("/getAdmins")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAdmins(){
+        return adminService.getAdmins();
+    }
 
-    //get all admins
-//    @GetMapping("/getAllAdmins")
-//    public List<UserDTO> getAllAdmins(){
-//        return adminService.getAllAdmins();
-//    }
-//
-//    //get admin by id
-//    @GetMapping("/getAdminByID/{id}")
-//    public ResponseEntity<?> getAdminByID(@PathVariable Integer id){
-//        return adminService.getUserByIdAndRole(id,"ROLE_ADMIN");
-//    }
-//
-//    // get admin by username
-//    @GetMapping("/getAdminByUsername/{username}")
-//    public ResponseEntity<?> getAdminByUsername(@PathVariable String username){
-//        return adminService.getUserByUsernameAndRole(username,"ROLE_ADMIN");
-//    }
-//
-//    //USER
-//    //delete user by id
-//    @DeleteMapping("/delete/user/{id}")
-//    public ResponseEntity<?> deleteUserById(@PathVariable Integer id){
-//        return adminService.deleteUserById(id,"ROLE_USER");
-//    }
-//
-//    //get all users
-//    @GetMapping("/getAllUsers")
-//    public List<UserDTO> getAllUsers(){
-//        return adminService.getAllUsers();
-//    }
 
-//    //get user details by user id
-//    @GetMapping("/getUserByID/{id}")
-//    public ResponseEntity<?> getUserByID(@PathVariable Integer id){
-//        return adminService.getUserByIdAndRole(id,"ROLE_USER");
-//    }
-//
-//    //get user details by username
-//    @GetMapping("/getUserByUsername/{username}")
-//    public ResponseEntity<?> getUserByUsername(@PathVariable String username){
-//        System.out.println(username);
-//        return adminService.getUserByUsernameAndRole(username,"ROLE_USER");
-//    }
-//
-//
-//    // COMPANY
-//    //delete company by id
-//    @DeleteMapping("/delete/company/{id}")
-//    public ResponseEntity<?> deleteCompanyById(@PathVariable Integer id){
-//        return adminService.deleteUserById(id,"ROLE_COMPANY");
-//    }
-//
-//
-//    //get all companies
-//    @GetMapping("/getAllCompanies")
-//    public List<UserDTO> getAllCompanies(){
-//        return adminService.getAllCompanies();
-//    }
-//
-//
-//    //get company details by id
-//    @GetMapping("/getCompanyByID/{id}")
-//    public ResponseEntity<?> getCompanyByID(@PathVariable Integer id){
-//        return adminService.getUserByIdAndRole(id,"ROLE_COMPANY");
-//    }
-//
-//
-//    //get company details by username
-//    @GetMapping("/getCompanyByUsername/{username}")
-//    public ResponseEntity<?> getCompanyByUsername(@PathVariable String username){
-//        return adminService.getUserByUsernameAndRole(username,"ROLE_COMPANY");
-//    }
-//
+    // get all Candidates
+    @GetMapping("/getCandidates")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getCandidates(){
+        return adminService.getCandidates();
+    }
+
+
+    // get all Companies
+    @GetMapping("/getCompanies")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getCompanies(){
+        return adminService.getCompanies();
+    }
+
+
+    //get Admin details by ID
+    @GetMapping("/getAdmin/{id}")
+    @PreAuthorize("role('ADMIN')")
+    public ResponseEntity<?> getAdmin(@PathVariable Integer id){
+
+        return adminService.getAdmin(id);
+    }
+
+
+    //get Candidate details by ID
+    @GetMapping("/getCandidate/{id}")
+    @PreAuthorize("role('ADMIN')")
+    public ResponseEntity<?> getCandidate(@PathVariable Integer id){
+
+        return adminService.getCandidate(id);
+    }
+
+    //get Company details by ID
+    @GetMapping("/getCompany/{id}")
+    @PreAuthorize("role('ADMIN')")
+    public ResponseEntity<?> getCompany(@PathVariable Integer id){
+
+        return adminService.getCompany(id);
+    }
+
+    // Delete Candidate by ID
+    @DeleteMapping("/deleteCandidate/{candidateId}")
+    @PreAuthorize("role('ADMIN')")
+    public ResponseEntity<?> deleteCandidate(@PathVariable Integer candidateId){
+        return adminService.deleteCandidate(candidateId);
+    }
+
+    // Delete Company by ID
+    @DeleteMapping("/deleteCompany/{companyId}")
+    @PreAuthorize("role('ADMIN')")
+    public ResponseEntity<?> deleteCompany(@PathVariable Integer companyId){
+        return adminService.deleteCompany(companyId);
+    }
+
+    // Delete Admin By ID
+    @DeleteMapping("/deleteAdmin/{adminId}")
+    @PreAuthorize("role('ADMIN')")
+    public ResponseEntity<?> deleteAdmin(@PathVariable Integer adminId, Authentication authentication){
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        Integer currentAdminId=userDetails.getUserId();
+
+        return adminService.deleteAdmin(adminId, currentAdminId);
+    }
+
+
+    // Delete all Admins
+    @DeleteMapping("/deleteAdmins")
+    @PreAuthorize("role('ADMIN')")
+    public ResponseEntity<?> deleteAdmins(@AuthenticationPrincipal Users user){
+        return adminService.deleteAdmins(user.getUserId());
+    }
+
+    // Delete all Candidates
+    @DeleteMapping("/deleteCandidates")
+    @PreAuthorize("role('ADMIN')")
+    public ResponseEntity<?> deleteCandidates(){
+        return adminService.deleteCandidates();
+    }
+
+    // Delete all Companies
+    @DeleteMapping("/deleteCompanies")
+    @PreAuthorize("role('ADMIN')")
+    public ResponseEntity<?> deleteCompanies(){
+        return adminService.deleteCompanies();
+    }
+
 //
 //    //approve job by id
 //    @PutMapping("/approveJob/{id}")
