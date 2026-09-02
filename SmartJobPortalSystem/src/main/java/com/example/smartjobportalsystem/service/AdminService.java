@@ -284,6 +284,7 @@ public class AdminService {
         return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Companies deleted successfully"));
     }
 
+    // pending jobs list
     public ResponseEntity<?> getPendingJobs() {
         List<Job> pendingJobs = jobRepository.findByStatus("PENDING");
 
@@ -291,36 +292,53 @@ public class AdminService {
             return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were in pending"));
         }
 
-        List<AdminPendingDTO> pendingList = pendingJobs.stream().map(AdminPendingDTO::new).toList();
+        List<AdminJobStatusDTO> pendingList = pendingJobs.stream().map(AdminJobStatusDTO::new).toList();
         return ResponseEntity.ok(pendingList);
 
     }
+
+    // approved jobs list
+    public ResponseEntity<?> getApprovedJobs() {
+        List<Job> approvedJobs = jobRepository.findByStatus("APPROVED");
+
+        if(approvedJobs.isEmpty()){
+            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
+        }
+
+        List<AdminJobStatusDTO> approvedList = approvedJobs.stream().map(AdminJobStatusDTO::new).toList();
+        return ResponseEntity.ok(approvedList);
+    }
+
+    // rejected jobs list
+    public ResponseEntity<?> getRejectedJobs() {
+        List<Job> rejectedJobs = jobRepository.findByStatus("REJECTED");
+
+        if(rejectedJobs.isEmpty()){
+            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
+        }
+
+        List<AdminJobStatusDTO> rejectedList = rejectedJobs.stream().map(AdminJobStatusDTO::new).toList();
+        return ResponseEntity.ok(rejectedList);
+    }
+
+    // approve job
+    public ResponseEntity<?> approveJob(Integer jobId) {
+        Job job =jobRepository.findById(jobId).orElseThrow(()-> new NotFoundException("Job not found with ID: "+jobId));
+
+        job.setStatus("APPROVED");
+        jobRepository.save(job);
+        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Job Approved Successfully"));
+    }
+
+    // reject job
+    public ResponseEntity<?> rejectJob(Integer jobId) {
+        Job job =jobRepository.findById(jobId).orElseThrow(()-> new NotFoundException("Job not found with ID: "+jobId));
+
+        job.setStatus("REJECTED");
+        jobRepository.save(job);
+        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Job Rejected Successfully"));
+    }
 }
-
-
-//
-//    //approve job
-//    public ResponseEntity<?> approveJob(Integer id) {
-//        Job job=jobRepo.findById(id).orElseThrow(()-> new NotFoundException("Job ID",id));
-//        if(job.getStatus().equalsIgnoreCase("APPROVED"))
-//            return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse(LocalDateTime.now(),"APPROVED","Job has been already APPROVED"));
-//
-//        job.setStatus("APPROVED");
-//        jobRepo.save(job);
-//        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Job APPROVED for Job ID "+id));
-//    }
-//
-//    //reject job
-//    public ResponseEntity<?> rejectJob(Integer id) {
-//        Job job=jobRepo.findById(id).orElseThrow(()-> new NotFoundException("Job ID",id));
-//        if(job.getStatus().equalsIgnoreCase("REJECTED"))
-//            return ResponseEntity.status(HttpStatus.FOUND).body(new ApiResponse(LocalDateTime.now(),"REJECTED","Job has been already REJECTED"));
-//
-//        job.setStatus("REJECTED");
-//        jobRepo.save(job);
-//        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Failure","Job REJECTED for Job ID "+id));
-//    }
-
 
 
 

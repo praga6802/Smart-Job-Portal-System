@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminPendingDTO {
+public class AdminJobStatusDTO {
     private Integer jobId;
     private String jobTitle;
     private String jobDescription;
@@ -22,7 +22,7 @@ public class AdminPendingDTO {
     private LocalDateTime postedAt;
     private String companyName;
 
-    public AdminPendingDTO(Job job){
+    public AdminJobStatusDTO(Job job){
         this.jobId = job.getJobId();
         this.jobTitle = job.getTitle();
         this.jobDescription = job.getDescription();

@@ -131,25 +131,39 @@ public class AdminController {
         return adminService.deleteCompanies();
     }
 
-//
-//    //approve job by id
-//    @PutMapping("/approveJob/{id}")
-//    public ResponseEntity<?> approveJob(@PathVariable Integer id){
-//        return adminService.approveJob(id);
-//    }
-//
-//
-//    //reject job by id
-//    @PutMapping("/rejectJob/{id}")
-//    public ResponseEntity<?> rejectJob(@PathVariable Integer id){
-//        return adminService.rejectJob(id);
-//    }
-//
-    //all pendingJobs
+
+    // Pending Jobs
     @GetMapping("/pendingJobs")
     public ResponseEntity<?> getPendingJobs(){
         return adminService.getPendingJobs();
     }
+
+    // Approved Jobs
+    @GetMapping("/approvedJobs")
+    public ResponseEntity<?> getApprovedJobs(){
+        return adminService.getApprovedJobs();
+    }
+
+    // Rejected Jobs
+    @GetMapping("/rejectedJobs")
+    public ResponseEntity<?> getRejectedJobs(){
+        return adminService.getRejectedJobs();
+    }
+
+
+    // Approve Job
+    @PutMapping("/approveJob/{jobId}")
+    public ResponseEntity<?> approveJob(@PathVariable Integer jobId){
+        return adminService.approveJob(jobId);
+    }
+
+
+    //reject job by id
+   @PutMapping("/rejectJob/{jobId}")
+   public ResponseEntity<?> rejectJob(@PathVariable Integer jobId){
+       return adminService.rejectJob(jobId);
+   }
+
 //
 //
 //    //get the number of applicants per job

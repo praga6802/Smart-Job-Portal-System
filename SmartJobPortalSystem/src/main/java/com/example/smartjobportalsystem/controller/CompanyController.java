@@ -79,17 +79,17 @@ public class CompanyController {
 
 //    // get applicants for the particular job
 //    @GetMapping("viewApplicants/{jobId}")
-//    public ResponseEntity<?> getApplicantsByJobId(@PathVariable Integer jobId, @AuthenticationPrincipal UserDetails company){
+//    public ResponseEntity<?> getApplicantsByJob(@PathVariable Integer jobId, @AuthenticationPrincipal UserDetails company){
 //        String email=company.getUsername();
-//        return companyService.getApplicantsByJobId(jobId,email);
+//        return companyService.getApplicantsByJob(jobId,email);
 //    }
-//
-//    // get all applicants
-//    @GetMapping("/viewApplicants")
-//    public ResponseEntity<?> getAllApplicants(@AuthenticationPrincipal UserDetails company){
-//        String email=company.getUsername();
-//        return companyService.getAllApplicants(email);
-//    }
+
+
+    // get all applicants by company
+    @GetMapping("/viewApplicants")
+    public ResponseEntity<?> getAllApplicants(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getAllApplicants(userDetails.getUserId());
+    }
 //
 //    // approve the applicant by applicant ID
 //    @PutMapping("/approveApplicant/{appli_id}")
