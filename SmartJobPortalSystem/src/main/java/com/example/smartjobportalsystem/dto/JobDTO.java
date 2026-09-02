@@ -1,6 +1,7 @@
 package com.example.smartjobportalsystem.dto;
 
 
+import com.example.smartjobportalsystem.entity.Job;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,5 +22,16 @@ public class JobDTO {
     private String experience;
     private String location;
     private String type;
+
+
+    public JobDTO(Job job){
+        this.title=job.getTitle();
+        this.description=job.getDescription();
+        this.salary=job.getSalary();
+        this.skills=job.getSkills();
+        this.experience=job.getExperience();
+        this.location=job.getLocation();
+        this.type=job.getType();
+    }
 
 }

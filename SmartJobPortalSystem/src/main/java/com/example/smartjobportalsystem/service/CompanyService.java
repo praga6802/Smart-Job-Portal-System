@@ -3,10 +3,12 @@ package com.example.smartjobportalsystem.service;
 import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.Company;
 import com.example.smartjobportalsystem.entity.Job;
+import com.example.smartjobportalsystem.entity.JobApplication;
 import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.exception.NotFoundException;
 import com.example.smartjobportalsystem.exception.UnAuthorizedException;
 import com.example.smartjobportalsystem.repository.CompanyRepository;
+import com.example.smartjobportalsystem.repository.JobApplicationRepository;
 import com.example.smartjobportalsystem.repository.JobRepository;
 import com.example.smartjobportalsystem.repository.UsersRepository;
 import jakarta.transaction.Transactional;
@@ -35,6 +37,9 @@ public class CompanyService {
 
     @Autowired
     private JobRepository jobRepository;
+
+    @Autowired
+    private JobApplicationRepository jobApplicationRepository;
 
     @Autowired
     private JWTService jwtService;
@@ -354,6 +359,24 @@ public class CompanyService {
 
         List<CompanyJobStatusDTO> statusList = companyJobs.stream().map(CompanyJobStatusDTO::new).toList();
         return ResponseEntity.ok(statusList);
+    }
+
+    public ResponseEntity<?> getAllApplicants(Integer companyId) {
+        Company company =companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with ID: "+companyId));
+        List<JobApplication> jobApplications = jobApplicationRepository.findByJob_Company(company);
+
+        if(jobApplications.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Applicants were found!"));
+        }
+
+        List<JobApplicantsResponseDTO> applicantsList = jobApplications.stream().map(application->{
+            return new JobApplicantsResponseDTO(application.getAppliedAt(),application.getCandidate().getFirstname(),
+                    application.getCandidate().getLastname(),application.getCandidate().getEmail(),
+                    application.getCandidate().getContact(),application.getCandidate().getSkills(),application.getCandidate().getExperience(),
+                    application.getJob().getJobId(),application.getJob().getTitle());
+        }).toList();
+
+        return ResponseEntity.ok(applicantsList);
     }
 }
 
