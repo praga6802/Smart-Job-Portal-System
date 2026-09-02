@@ -5,6 +5,7 @@ import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.exception.NameNotFoundException;
 
+import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -41,11 +43,13 @@ public class AuthService {
     public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-            Users user = usersRepo.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new BadCredentialsException("Invalid Credentials!"));
-            String jwtToken = jwtService.generateToken(loginRequest.getEmail());
+            MyUserDetails user = (MyUserDetails) authentication.getPrincipal();
+
+            String jwtToken = jwtService.generateToken(user.getEmail());
             LoginResponse response = new LoginResponse("Success", "Login Successfully", jwtToken, user.getRole());
             return ResponseEntity.ok(response);
-        } catch (BadCredentialsException e) {
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(LocalDateTime.now(),"Failure","Invalid Credentials"));
         }
     }

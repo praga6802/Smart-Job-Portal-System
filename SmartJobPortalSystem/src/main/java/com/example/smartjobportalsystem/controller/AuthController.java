@@ -3,6 +3,7 @@ package com.example.smartjobportalsystem.controller;
 
 
 import com.example.smartjobportalsystem.dto.LoginRequest;
+import com.example.smartjobportalsystem.dto.LoginResponse;
 import com.example.smartjobportalsystem.service.AuthService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
-        System.out.println("login request: "+loginRequest.getEmail()+"password: "+loginRequest.getPassword());
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         return authService.login(loginRequest);
     }
 

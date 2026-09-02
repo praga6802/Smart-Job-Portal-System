@@ -1,15 +1,9 @@
 package com.example.smartjobportalsystem.service;
 
 import com.example.smartjobportalsystem.dto.*;
-import com.example.smartjobportalsystem.entity.Admin;
-import com.example.smartjobportalsystem.entity.Candidate;
-import com.example.smartjobportalsystem.entity.Company;
-import com.example.smartjobportalsystem.entity.Users;
+import com.example.smartjobportalsystem.entity.*;
 import com.example.smartjobportalsystem.exception.NotFoundException;
-import com.example.smartjobportalsystem.repository.AdminRepository;
-import com.example.smartjobportalsystem.repository.CandidateRepository;
-import com.example.smartjobportalsystem.repository.CompanyRepository;
-import com.example.smartjobportalsystem.repository.UsersRepository;
+import com.example.smartjobportalsystem.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +29,9 @@ public class AdminService {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -120,10 +117,15 @@ public class AdminService {
         }
 
         if (admin.getPassword() != null && !admin.getPassword().trim().isEmpty()) {
-            if (admin1.getPassword().equals(admin.getPassword())) {
+            if (admin1.getPassword().matches(admin.getPassword())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same password!"));
             }
-            admin1.setPassword(passwordEncoder.encode(admin.getPassword()));
+
+            String encodedPassword = passwordEncoder.encode(admin.getPassword());
+            admin.setPassword(encodedPassword);
+            user.setPassword(encodedPassword);
+            usersRepository.save(user);
+
             updatedFields.add("Password");
         }
 
@@ -281,25 +283,21 @@ public class AdminService {
         companyRepository.deleteAll();
         return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Companies deleted successfully"));
     }
+
+    public ResponseEntity<?> getPendingJobs() {
+        List<Job> pendingJobs = jobRepository.findByStatus("PENDING");
+
+        if(pendingJobs.isEmpty()){
+            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were in pending"));
+        }
+
+        List<AdminPendingDTO> pendingList = pendingJobs.stream().map(AdminPendingDTO::new).toList();
+        return ResponseEntity.ok(pendingList);
+
+    }
 }
 
-//
-//    //get application count per job
-//    public List<AppPerJobCount> getApplicationPerJob() {
-//        List<Object[]> results=jobApplicationRepo.countApplicationsPerJob();
-//        return results.stream().map(job-> new AppPerJobCount(
-//                (String)job[0],(Long)job[1]
-//        )).toList();
-//    }
-//
-//    //get application count by company
-//    public List<AppPerCompanyCount> getApplicationPerCompany() {
-//        List<Object[]> results=jobApplicationRepo.countApplicationPerCompany();
-//        return results.stream().map(job-> new AppPerCompanyCount(
-//                (String)job[0],(Long)job[1]
-//        )).toList();
-//
-//    }
+
 //
 //    //approve job
 //    public ResponseEntity<?> approveJob(Integer id) {
@@ -322,13 +320,27 @@ public class AdminService {
 //        jobRepo.save(job);
 //        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Failure","Job REJECTED for Job ID "+id));
 //    }
+
+
+
+
+// statistics
 //
-//
-//    // get all pending jobs
-//    public List<PendingJobDTO> getAllPendingJobs() {
-//        List<Job> pendingJobs=jobRepo.findByStatus("PENDING");
-//        return pendingJobs.stream().map(
-//                job-> new PendingJobDTO(job.getJobId(),job.getCompanyName(),job.getJobTitle(),job.getSkills(),job.getJobLocation(),job.getJobType(),job.getSalary(),job.getExperience())
-//        ).toList();
+//    //get application count per job
+//    public List<AppPerJobCount> getApplicationPerJob() {
+//        List<Object[]> results=jobApplicationRepo.countApplicationsPerJob();
+//        return results.stream().map(job-> new AppPerJobCount(
+//                (String)job[0],(Long)job[1]
+//        )).toList();
 //    }
+//
+//    //get application count by company
+//    public List<AppPerCompanyCount> getApplicationPerCompany() {
+//        List<Object[]> results=jobApplicationRepo.countApplicationPerCompany();
+//        return results.stream().map(job-> new AppPerCompanyCount(
+//                (String)job[0],(Long)job[1]
+//        )).toList();
+//
+//    }
+
 //}

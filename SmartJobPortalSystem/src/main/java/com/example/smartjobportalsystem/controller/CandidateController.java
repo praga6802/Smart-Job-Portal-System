@@ -6,7 +6,6 @@ import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,33 +30,35 @@ public class CandidateController {
     }
 
 
-    //  ---- JOB FEATURES --------
-//    // apply
-//    @PostMapping("/applyJob/{id}")
-//    public ResponseEntity<?> applyJob(@PathVariable Integer id, Principal principal) {
-//        return userService.applyJob(id, principal.getName());
-//    }
-//
-//    // view application status
-//    @GetMapping("/application-status")
-//    public ResponseEntity<?> viewApplicationStatus(@AuthenticationPrincipal UserDetails applicant) {
-//        String email = applicant.getUsername();
-//        return userService.viewApplicationStatus(email);
-//    }
-//
-//    // find job by company
-//    @GetMapping("/viewJobsByCompany/{companyName}")
-//    public ResponseEntity<?> viewJobsByCompany(@PathVariable String companyName) {
-//        List<JobDTO> companyJobs = userService.viewJobsByCompany(companyName);
-//        return ResponseEntity.ok(companyJobs);
-//    }
-//
-//    // get all jobs
-//    @GetMapping("/viewAllJobs")
-//    public ResponseEntity<List<JobDTO>> getAllJobs() {
-//        List<JobDTO> allJobs = userService.viewAllJobs();
-//        return ResponseEntity.ok(allJobs);
-//    }
+    //  ---- JOB Application Features --------
+    // apply job
+    @PostMapping("/applyJob/{jobId}")
+    public ResponseEntity<?> applyJob(@PathVariable Integer jobId, @AuthenticationPrincipal MyUserDetails userDetails){
+        System.out.println("Candidate ID: "+userDetails.getUserId());
+        return candidateService.applyJob(jobId, userDetails.getUserId());
+    }
+
+    // get job by company
+    @GetMapping("/jobs")
+    public ResponseEntity<?> getJobsByCompany(@RequestParam String companyName) {
+        return candidateService.getJobsByCompany(companyName);
+    }
+
+
+    // get all jobs
+    @GetMapping("/viewAllJobs")
+    public ResponseEntity<?> getJobs() {
+        return candidateService.getJobs();
+    }
+
+
+    // view application status
+    @GetMapping("/application-status")
+    public ResponseEntity<?> viewApplicationStatus(@AuthenticationPrincipal MyUserDetails userDetails) {
+        return candidateService.viewApplicationStatus(userDetails.getUserId());
+    }
+
+
 //
 //
 //    // ----------------------- EMAIL verification ---------------------------

@@ -15,5 +15,5 @@ public interface CandidateRepository extends JpaRepository<Candidate,Integer> {
 
     Optional<Candidate> findByEmail(String email);
 
-    Optional<Candidate> findByUserUserId(Integer candidateId);
+    Optional<Candidate> findByUser_UserId(Integer candidateId);
 }

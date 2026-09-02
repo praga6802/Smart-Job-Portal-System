@@ -1,9 +1,6 @@
 package com.example.smartjobportalsystem.service;
 
-import com.example.smartjobportalsystem.dto.ApiResponse;
-import com.example.smartjobportalsystem.dto.CompanyRegisterDTO;
-import com.example.smartjobportalsystem.dto.JobDTO;
-import com.example.smartjobportalsystem.dto.LoginResponse;
+import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.Company;
 import com.example.smartjobportalsystem.entity.Job;
 import com.example.smartjobportalsystem.entity.Users;
@@ -22,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyService {
@@ -87,11 +85,13 @@ public class CompanyService {
     // update company details
     @Transactional
     public ResponseEntity<?> updateCompany(Integer userId,CompanyRegisterDTO company) {
+
+
         List<String> updatedFields= new ArrayList<>();
         String newToken =null;
 
         Users user = usersRepository.findById(userId).orElseThrow(()-> new NotFoundException("User not found!"));
-        Company comp = companyRepository.findByUserUserId(userId).orElseThrow(()-> new NotFoundException("Company not found!"));
+        Company comp = companyRepository.findByUser_UserId(userId).orElseThrow(()-> new NotFoundException("Company not found!"));
 
 
         if(company.getName()!=null && !company.getName().trim().isEmpty()){
@@ -127,10 +127,14 @@ public class CompanyService {
         }
 
         if(company.getPassword()!=null && !company.getPassword().trim().isEmpty()){
-            if(comp.getPassword().equals(company.getPassword())){
+            if(comp.getPassword().matches(company.getPassword())){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(),"Failure","Do not enter same password!"));
             }
-            comp.setPassword(passwordEncoder.encode(company.getPassword()));
+            String encodedPassword = passwordEncoder.encode(company.getPassword());
+            comp.setPassword(encodedPassword);
+            user.setPassword(encodedPassword);
+            usersRepository.save(user);
+
             updatedFields.add("Password");
         }
 
@@ -210,9 +214,9 @@ public class CompanyService {
         return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success",message));
     }
 
-    // Post New Job
+    // post new job
     public ResponseEntity<?> postJob(JobDTO job, Integer companyId){
-        Company company=companyRepository.findByUserUserId(companyId).orElseThrow(()-> new NotFoundException("Company not found!"));
+        Company company=companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found!"));
         Job j= new Job();
         j.setTitle(job.getTitle());
         j.setDescription(job.getDescription());
@@ -228,5 +232,128 @@ public class CompanyService {
         return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","New Job has been posted Successfully"));
     }
 
+    // update job details
+    public ResponseEntity<?> updateJob(Integer jobId, JobDTO jobDTO, Integer companyId) {
+        Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found!"));
+
+        Job job = jobRepository.findById(jobId).orElseThrow(()-> new NotFoundException("Job not found!"));
+
+        List<String> updatedDetails=new ArrayList<>();
+
+        if(job.getCompany().getCompanyId().equals(companyId)){
+            throw new UnAuthorizedException(company.getEmail(),jobDTO.getTitle());
+        }
+
+        if (jobDTO.getTitle() != null && !jobDTO.getTitle().isEmpty()) {
+            job.setTitle(jobDTO.getTitle());
+            updatedDetails.add("Title");
+        }
+
+        if (jobDTO.getDescription() != null && !jobDTO.getDescription().isEmpty()) {
+            job.setDescription(jobDTO.getDescription());
+            updatedDetails.add("Description");
+        }
+
+        if (jobDTO.getSkills() != null && !jobDTO.getSkills().isEmpty()) {
+            job.setSkills(jobDTO.getSkills());
+            updatedDetails.add("Skills");
+        }
+
+        if (jobDTO.getSalary() != null && jobDTO.getSalary()!=0.00) {
+            job.setSalary(jobDTO.getSalary());
+            updatedDetails.add("Salary");
+        }
+
+        if (jobDTO.getExperience() != null && !jobDTO.getExperience().isEmpty()) {
+            job.setExperience(jobDTO.getExperience());
+            updatedDetails.add("Experience");
+        }
+
+        if (jobDTO.getLocation() != null && !jobDTO.getLocation().isEmpty()) {
+            job.setLocation(jobDTO.getLocation());
+            updatedDetails.add("Location");
+        }
+
+        if (jobDTO.getType() != null && !jobDTO.getType().isEmpty()) {
+            job.setType(jobDTO.getType());
+            updatedDetails.add("Type");
+        }
+
+        jobRepository.save(job);
+
+        String message="Job "+String.join(",",updatedDetails)+" updated Successfully!";
+
+        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", message));
+    }
+
+    // delete job by ID
+    @Transactional
+    public ResponseEntity<?> deleteJob(Integer jobId, Integer companyId) {
+        Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with ID: "+companyId));
+
+        Job job = jobRepository.findById(jobId).orElseThrow(()-> new NotFoundException("Job not found with ID: "+jobId));
+
+
+        if(!job.getCompany().getCompanyId().equals(company.getCompanyId())){
+            throw new UnAuthorizedException(company.getEmail(), job.getTitle());
+        }
+
+        jobRepository.delete(job);
+        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Job Deleted Successfully!"));
+
+    }
+
+    // delete all jobs
+    public ResponseEntity<?> deleteJobs(Integer companyId) {
+        Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found!"));
+
+        List<Job> jobs = jobRepository.findByCompany(company);
+
+        if(jobs.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
+        }
+        jobRepository.deleteAll(jobs);
+        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","All jobs deleted Successfully"));
+    }
+
+    // get all jobs
+    public ResponseEntity<?> getJobs(Integer companyId) {
+            Company company= companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found"));
+
+            List<Job> jobs = jobRepository.findByCompany(company);
+            if(jobs.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
+            }
+
+            List<JobResponseDTO> jobList=jobs.stream().map(JobResponseDTO::new).toList();
+
+            return ResponseEntity.ok(jobList);
+        }
+
+    // get job by ID
+    public ResponseEntity<?> getJobById(Integer jobId, Integer companyId) {
+        Company company= companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with id: "+companyId));
+
+        Job job = jobRepository.findById(jobId).orElseThrow(()-> new NotFoundException("Job not found with id: "+jobId));
+
+        if(!job.getCompany().getCompanyId().equals(company.getCompanyId())){
+            throw new UnAuthorizedException(company.getEmail(),job.getTitle());
+        }
+
+        return ResponseEntity.ok(new JobResponseDTO(job));
+    }
+
+    //get status of job posted by company
+    public ResponseEntity<?> viewJobStatus(Integer companyId) {
+        Company company =companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with ID: "+companyId));
+
+        List<Job> companyJobs = jobRepository.findByCompany(company);
+        if(companyJobs.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
+        }
+
+        List<CompanyJobStatusDTO> statusList = companyJobs.stream().map(CompanyJobStatusDTO::new).toList();
+        return ResponseEntity.ok(statusList);
+    }
 }
 

@@ -145,12 +145,11 @@ public class AdminController {
 //        return adminService.rejectJob(id);
 //    }
 //
-//
-//    //all pendingJobs
-//    @GetMapping("/pendingJobs")
-//    public List<PendingJobDTO> getAllPendingJobs(){
-//        return adminService.getAllPendingJobs();
-//    }
+    //all pendingJobs
+    @GetMapping("/pendingJobs")
+    public ResponseEntity<?> getPendingJobs(){
+        return adminService.getPendingJobs();
+    }
 //
 //
 //    //get the number of applicants per job

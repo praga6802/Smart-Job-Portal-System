@@ -53,4 +53,12 @@ public class MyUserDetails implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+    public String getRole() {
+        return user.getRole();
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
 }
