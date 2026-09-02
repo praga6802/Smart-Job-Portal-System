@@ -16,30 +16,28 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer jobId;
 
-    @Column(nullable = false)
-    private String jobTitle;
+    @Column(nullable = false, name = "title")
+    private String title;
 
-    @ElementCollection
-    @CollectionTable(name = "job_skills",joinColumns = @JoinColumn(name="job_id"))
-    @Column(nullable = false)
-    private List<String> skills;
+    @Column(nullable = false, name = "skills")
+    private String skills;
 
-    @Column(nullable = false,length = 2000)
-    private String jobDescription;
+    @Column(nullable = false,length = 2000, name = "description")
+    private String description;
 
-    @Column(nullable = false)
-    private String jobLocation;
+    @Column(nullable = false, name = "location")
+    private String location;
 
     @Column(nullable = false)
     private Double salary;
 
-    @Column(nullable = false)
-    private String jobType;
+    @Column(nullable = false, name = "type")
+    private String type;
 
     @Column(nullable = false)
     private String experience;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime postedDate;
 
     @Column(nullable = false)
@@ -47,9 +45,15 @@ public class Job {
 
     @ManyToOne
     @JoinColumn(name="company_id",nullable = false)
-    private Users company;
-
-    private String companyName;
+    private Company company;
 
 
+    @PrePersist
+    public void setDefaults(){
+        if(postedDate==null)
+            postedDate=LocalDateTime.now();
+
+        if(status==null)
+            status="PENDING";
+    }
 }

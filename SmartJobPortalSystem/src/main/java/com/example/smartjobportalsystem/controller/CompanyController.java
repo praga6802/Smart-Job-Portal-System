@@ -1,19 +1,17 @@
 package com.example.smartjobportalsystem.controller;
 
 
-import com.example.smartjobportalsystem.dto.CandidateRegisterDTO;
 import com.example.smartjobportalsystem.dto.CompanyRegisterDTO;
 import com.example.smartjobportalsystem.dto.JobDTO;
-import com.example.smartjobportalsystem.dto.JobDetailResponse;
+import com.example.smartjobportalsystem.entity.Users;
+
+import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/auth/company")
@@ -29,46 +27,56 @@ public class CompanyController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateCompany(Authentication authentication, @RequestBody CompanyRegisterDTO company){
-        String email = authentication.getName();
-        return companyService.updateCompany(email,company);
+    public ResponseEntity<?> updateCompany(@AuthenticationPrincipal MyUserDetails user, @RequestBody CompanyRegisterDTO company){
+        return companyService.updateCompany(user.getUserId(),company);
     }
 
-//    // post job
-//    @PostMapping("/postJob")
-//    public ResponseEntity<?> postJob(@RequestBody JobDTO job, @AuthenticationPrincipal UserDetails companyUser){
-//        String email=companyUser.getUsername();
-//        return companyService.postJob(job,email);
-//    }
+    // -------- JOB FEATURES ------------
+    // post job
+    @PostMapping("/postJob")
+    public ResponseEntity<?> postJob(@RequestBody JobDTO job, @AuthenticationPrincipal MyUserDetails user){
+        return companyService.postJob(job,user.getUserId());
+    }
 
-//    //update job by ID
-//    @PutMapping("/updateJob/{id}")
-//    public ResponseEntity<?> updateJob(@PathVariable Integer id,@RequestBody JobDTO job, @AuthenticationPrincipal UserDetails companyUser){
-//        String email=companyUser.getUsername();
-//        return companyService.updateJob(id,job,email);
-//    }
-//
-//    // delete job by ID
-//    @DeleteMapping("/deleteJob/{id}")
-//    public ResponseEntity<?> deleteJob(@PathVariable Integer id, @AuthenticationPrincipal UserDetails companyUser){
-//        String email=companyUser.getUsername();
-//        return companyService.deleteJob(id,email);
-//    }
-//
-//    //get all jobs
-//    @GetMapping("/getAllJobs")
-//    public List<JobDetailResponse> getAllJobs(@AuthenticationPrincipal UserDetails company){
-//        String email=company.getUsername();
-//        return companyService.getAllJobs(email);
-//    }
-//
-//    //get job by id
-//    @GetMapping("/getJobById/{id}")
-//    public ResponseEntity<?> getJobById(@PathVariable Integer id, @AuthenticationPrincipal UserDetails company){
-//        String email=company.getUsername();
-//        return companyService.getJobById(id,email);
-//    }
-//
+    //update job by id
+    @PutMapping("/updateJob/{jobId}")
+    public ResponseEntity<?> updateJob(@PathVariable Integer jobId,@RequestBody JobDTO job, @AuthenticationPrincipal MyUserDetails company){
+        return companyService.updateJob(jobId,job,company.getUserId());
+    }
+
+
+    // delete job by ID
+    @DeleteMapping("/deleteJob/{jobid}")
+    public ResponseEntity<?> deleteJob(@PathVariable Integer jobId, @AuthenticationPrincipal MyUserDetails company){
+        return companyService.deleteJob(jobId,company.getUserId());
+    }
+
+
+    // delete all jobs
+    @DeleteMapping("/deleteJobs")
+    public ResponseEntity<?> deleteJobs(@AuthenticationPrincipal MyUserDetails company){
+        return companyService.deleteJobs(company.getUserId());
+    }
+
+
+    //get all jobs
+    @GetMapping("/getAllJobs")
+    public ResponseEntity<?> getJobs(@AuthenticationPrincipal MyUserDetails company){
+        return companyService.getJobs(company.getUserId());
+    }
+
+    //get job by id
+    @GetMapping("/getJobById/{jobId}")
+    public ResponseEntity<?> getJobById(@PathVariable Integer jobId, @AuthenticationPrincipal MyUserDetails company){
+        return companyService.getJobById(jobId,company.getUserId());
+    }
+
+    @GetMapping("/job-status")
+    public ResponseEntity<?> viewJobStatus(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.viewJobStatus(userDetails.getUserId());
+    }
+
+
 //    // get applicants for the particular job
 //    @GetMapping("viewApplicants/{jobId}")
 //    public ResponseEntity<?> getApplicantsByJobId(@PathVariable Integer jobId, @AuthenticationPrincipal UserDetails company){

@@ -3,6 +3,7 @@ package com.example.smartjobportalsystem.controller;
 
 
 import com.example.smartjobportalsystem.dto.LoginRequest;
+import com.example.smartjobportalsystem.dto.LoginResponse;
 import com.example.smartjobportalsystem.service.AuthService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         return authService.login(loginRequest);
     }
 
@@ -34,11 +35,6 @@ public class AuthController {
         return authService.logout();
     }
 
-//    @PutMapping({"/admin/updateUser","/user/updateUser","/company/updateUser"})
-//    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO user){
-//        String existingEmail= SecurityContextHolder.getContext().getAuthentication().getName();
-//        return authService.updateUser(user,existingEmail);
-//    }
 
 //    @PutMapping("/forgotPassword")
 //    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDTO password, @AuthenticationPrincipal UserDetails user){

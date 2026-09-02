@@ -16,30 +16,23 @@ public class JobApplication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer applicationId;
+    private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name="applicantId")
-    private Users applicant;
-
-
-    @ManyToOne
-    @JoinColumn(name="jobId")
-    private Job job;
     private LocalDateTime appliedAt;
     private String status;
 
     @ManyToOne
-    @JoinColumn(name="resumeId")
-    private ResumeEntity resume;
+    @JoinColumn(name="candidate_id")
+    private Candidate candidate;
 
-    public JobApplication(Integer applicationId, Users applicant, Job job, LocalDateTime appliedAt, String status, ResumeEntity resume) {
-        this.applicationId = applicationId;
-        this.applicant = applicant;
-        this.job = job;
-        this.appliedAt = appliedAt;
-        this.status = status;
-        this.resume = resume;
+    @ManyToOne
+    @JoinColumn(name="job_id")
+    private Job job;
+
+
+    public void setDefaults(){
+        status="Applied";
+        appliedAt=LocalDateTime.now();
     }
 
 }
