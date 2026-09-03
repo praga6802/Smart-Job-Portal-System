@@ -15,4 +15,6 @@ public interface JobRepository extends JpaRepository<Job,Integer> {
     List<Job> findByCompany(Company company);
 
     List<Job> findByStatus(String status);
+
+
 }

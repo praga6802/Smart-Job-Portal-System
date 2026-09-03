@@ -34,6 +34,9 @@ public class AdminService {
     private JobRepository jobRepository;
 
     @Autowired
+    private JobApplicationRepository jobApplicationRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -338,27 +341,51 @@ public class AdminService {
         jobRepository.save(job);
         return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Job Rejected Successfully"));
     }
+
+    // get applications per job
+    public ResponseEntity<?> getApplicationsPerJob() {
+        List<AppPerJobCount> applications =
+                jobApplicationRepository.getApplicationsPerJob().orElseThrow(()-> new NotFoundException("No Applications found!"));
+
+        return ResponseEntity.ok(applications);
+    }
+
+    // get applications per company
+    public ResponseEntity<?> getApplicationsPerCompany() {
+        List<AppPerCompanyCount> applications = jobApplicationRepository.getApplicationsPerCompany()
+                .orElseThrow(()-> new NotFoundException("No Applications were found"));
+
+        return ResponseEntity.ok(applications);
+    }
+
+    // get total applications
+    public ResponseEntity<?> getTotalApplications() {
+        Long count  = jobApplicationRepository.getTotalApplications();
+
+        if(count==0L){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Applications found"));
+        }
+        return ResponseEntity.ok(count);
+    }
+
+    // get total companies
+    public ResponseEntity<?> getTotalCompanies() {
+        Long count  = companyRepository.getTotalCompanies();
+
+        if(count==0L){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Applications found"));
+        }
+        return ResponseEntity.ok(count);
+    }
+
+    // get total candidates
+    public ResponseEntity<?> getTotalCandidates() {
+        Long count  = candidateRepository.getTotalCandidates();
+
+        if(count==0L){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Applications found"));
+        }
+        return ResponseEntity.ok(count);
+    }
 }
 
-
-
-// statistics
-//
-//    //get application count per job
-//    public List<AppPerJobCount> getApplicationPerJob() {
-//        List<Object[]> results=jobApplicationRepo.countApplicationsPerJob();
-//        return results.stream().map(job-> new AppPerJobCount(
-//                (String)job[0],(Long)job[1]
-//        )).toList();
-//    }
-//
-//    //get application count by company
-//    public List<AppPerCompanyCount> getApplicationPerCompany() {
-//        List<Object[]> results=jobApplicationRepo.countApplicationPerCompany();
-//        return results.stream().map(job-> new AppPerCompanyCount(
-//                (String)job[0],(Long)job[1]
-//        )).toList();
-//
-//    }
-
-//}

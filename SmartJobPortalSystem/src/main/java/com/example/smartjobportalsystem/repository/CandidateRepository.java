@@ -2,6 +2,7 @@ package com.example.smartjobportalsystem.repository;
 
 import com.example.smartjobportalsystem.entity.Candidate;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
@@ -16,4 +17,7 @@ public interface CandidateRepository extends JpaRepository<Candidate,Integer> {
     Optional<Candidate> findByEmail(String email);
 
     Optional<Candidate> findByUser_UserId(Integer candidateId);
+
+    @Query("SELECT COUNT(c) FROM Candidate c")
+    Long getTotalCandidates();
 }

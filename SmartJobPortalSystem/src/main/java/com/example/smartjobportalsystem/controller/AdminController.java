@@ -4,7 +4,6 @@ import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.service.AdminService;
-import com.example.smartjobportalsystem.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -164,19 +163,36 @@ public class AdminController {
        return adminService.rejectJob(jobId);
    }
 
-//
-//
-//    //get the number of applicants per job
-//    @GetMapping("/application-per-job")
-//    public ResponseEntity<?> getApplicationPerJob(){
-//        return ResponseEntity.ok(adminService.getApplicationPerJob());
-//    }
-//
-//
-//    //get the number of applicants per company
-//    @GetMapping("/application-per-company")
-//    public ResponseEntity<?> getApplicationPerCompany(){
-//        return ResponseEntity.ok(adminService.getApplicationPerCompany());
-//    }
+    //Applications per job
+    @GetMapping("/applicationsPerJob")
+    public ResponseEntity<?> getApplicationsPerJob(){
+        return adminService.getApplicationsPerJob();
+    }
+
+    //Applications per company
+    @GetMapping("/applicationsPerCompany")
+    public ResponseEntity<?> getApplicationsPerCompany(){
+        return adminService.getApplicationsPerCompany();
+    }
+
+    // total number of applications
+    @GetMapping("/totalApplications")
+    public ResponseEntity<?> getTotalApplications(){
+        return adminService.getTotalApplications();
+    }
+
+    // total number of companies
+    @GetMapping("/totalCompanies")
+    public ResponseEntity<?> getTotalCompanies(){
+        return adminService.getTotalCompanies();
+    }
+
+    // total number of candidates
+    @GetMapping("/totalCandidates")
+    public ResponseEntity<?> getTotalCandidates(){
+        return adminService.getTotalCandidates();
+    }
+
+
 
 }
