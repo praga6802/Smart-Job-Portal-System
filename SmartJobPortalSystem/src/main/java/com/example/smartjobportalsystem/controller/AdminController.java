@@ -163,6 +163,9 @@ public class AdminController {
        return adminService.rejectJob(jobId);
    }
 
+
+
+   // --- ADMIN STATISTICS ---
     //Applications per job
     @GetMapping("/applicationsPerJob")
     public ResponseEntity<?> getApplicationsPerJob(){
@@ -192,7 +195,5 @@ public class AdminController {
     public ResponseEntity<?> getTotalCandidates(){
         return adminService.getTotalCandidates();
     }
-
-
 
 }

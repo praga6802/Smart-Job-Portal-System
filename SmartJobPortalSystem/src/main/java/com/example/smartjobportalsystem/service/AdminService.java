@@ -2,6 +2,7 @@ package com.example.smartjobportalsystem.service;
 
 import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.*;
+import com.example.smartjobportalsystem.enums.JobStatus;
 import com.example.smartjobportalsystem.exception.NotFoundException;
 import com.example.smartjobportalsystem.repository.*;
 import jakarta.transaction.Transactional;
@@ -289,7 +290,7 @@ public class AdminService {
 
     // pending jobs list
     public ResponseEntity<?> getPendingJobs() {
-        List<Job> pendingJobs = jobRepository.findByStatus("PENDING");
+        List<Job> pendingJobs = jobRepository.findByStatus(JobStatus.PENDING);
 
         if(pendingJobs.isEmpty()){
             return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were in pending"));
@@ -302,7 +303,7 @@ public class AdminService {
 
     // approved jobs list
     public ResponseEntity<?> getApprovedJobs() {
-        List<Job> approvedJobs = jobRepository.findByStatus("APPROVED");
+        List<Job> approvedJobs = jobRepository.findByStatus(JobStatus.APPROVED);
 
         if(approvedJobs.isEmpty()){
             return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
@@ -314,7 +315,7 @@ public class AdminService {
 
     // rejected jobs list
     public ResponseEntity<?> getRejectedJobs() {
-        List<Job> rejectedJobs = jobRepository.findByStatus("REJECTED");
+        List<Job> rejectedJobs = jobRepository.findByStatus(JobStatus.REJECTED);
 
         if(rejectedJobs.isEmpty()){
             return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
@@ -328,7 +329,7 @@ public class AdminService {
     public ResponseEntity<?> approveJob(Integer jobId) {
         Job job =jobRepository.findById(jobId).orElseThrow(()-> new NotFoundException("Job not found with ID: "+jobId));
 
-        job.setStatus("APPROVED");
+        job.setStatus(JobStatus.APPROVED);
         jobRepository.save(job);
         return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Job Approved Successfully"));
     }
@@ -337,7 +338,7 @@ public class AdminService {
     public ResponseEntity<?> rejectJob(Integer jobId) {
         Job job =jobRepository.findById(jobId).orElseThrow(()-> new NotFoundException("Job not found with ID: "+jobId));
 
-        job.setStatus("REJECTED");
+        job.setStatus(JobStatus.REJECTED);
         jobRepository.save(job);
         return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Job Rejected Successfully"));
     }

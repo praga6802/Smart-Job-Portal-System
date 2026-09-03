@@ -2,10 +2,13 @@ package com.example.smartjobportalsystem.repository;
 
 import com.example.smartjobportalsystem.dto.AppPerCompanyCount;
 import com.example.smartjobportalsystem.dto.AppPerJobCount;
+import com.example.smartjobportalsystem.dto.JobStatusDTO;
 import com.example.smartjobportalsystem.entity.Candidate;
 import com.example.smartjobportalsystem.entity.Company;
+import com.example.smartjobportalsystem.entity.Job;
 import com.example.smartjobportalsystem.entity.JobApplication;
 
+import com.example.smartjobportalsystem.enums.JobStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
@@ -50,4 +53,11 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
            GROUP BY c.companyId, c.name
             """)
     Optional<List<AppPerCompanyCount>> getApplicationsPerCompany();
+
+
+    List<JobApplication> findByJob(Job job);
+
+
+    boolean existsByCandidate_CandidateIdAndJob_JobId(Integer candidateId, Integer jobId);
+
 }

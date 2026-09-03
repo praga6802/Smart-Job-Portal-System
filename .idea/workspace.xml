@@ -5,20 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d4f43ba-cabb-4a3e-b837-a045f2008cfd" name="Changes" comment="updated">
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/JobStatusDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/enums/ApplicationStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/enums/JobStatus.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/AppPerCompanyCount.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/AppPerCompanyCount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/AppPerJobCount.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/AppPerJobCount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/CandidateRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/CandidateRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/CompanyRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/CompanyRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CandidateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CandidateController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CompanyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CompanyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ApplicantsDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ApplicationStatusDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ApplicationStatusDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/CompanyJobStatusDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/CompanyJobStatusDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/JobApplicantsResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/JobApplicantsResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Job.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Job.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/JobApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/JobApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/JobApplicationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/JobApplicationRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/JobRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/JobRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CandidateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CandidateService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CompanyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CompanyService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/AdminController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/CandidateRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/CandidateRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/CompanyRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/CompanyRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CandidateController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CandidateController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CompanyController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CompanyController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/ApplicantsDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/ApplicationStatusDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/ApplicationStatusDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/CompanyJobStatusDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/CompanyJobStatusDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/JobApplicantsResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/JobApplicantsResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/Job.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/Job.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/JobApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/JobApplication.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/JobApplicationRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/JobApplicationRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/JobRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/JobRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/AdminService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/AdminService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/CandidateService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/CandidateService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/CompanyService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/CompanyService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +49,7 @@
         <option value="Dockerfile" />
         <option value="Exception" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -64,28 +83,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.SmartJobPortalSystem.executor": "Run",
-    "Application.SmartJobPortalSystemApplication.executor": "Run",
-    "Application.SpringSecurityApplication.executor": "Run",
-    "Downloaded.Files.Path.Enabled": "false",
-    "Maven.SmartJobPortalSystem [clean].executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "myworkings",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/praga/OneDrive/Documents/Java Projects/SmartJobPortalSystem",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.keymap"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.SmartJobPortalSystem.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SmartJobPortalSystemApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SpringSecurityApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Maven.SmartJobPortalSystem [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;myworkings&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/praga/OneDrive/Documents/Java Projects/SmartJobPortalSystem&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.example.SpringSecurity.service" />
