@@ -8,6 +8,7 @@ import com.example.smartjobportalsystem.entity.Company;
 import com.example.smartjobportalsystem.entity.Job;
 import com.example.smartjobportalsystem.entity.JobApplication;
 
+import com.example.smartjobportalsystem.enums.ApplicationStatus;
 import com.example.smartjobportalsystem.enums.JobStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -60,4 +61,5 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 
     boolean existsByCandidate_CandidateIdAndJob_JobId(Integer candidateId, Integer jobId);
 
+    List<JobApplication> findByStatusAndJob_Company(ApplicationStatus applicationStatus, Company company);
 }
