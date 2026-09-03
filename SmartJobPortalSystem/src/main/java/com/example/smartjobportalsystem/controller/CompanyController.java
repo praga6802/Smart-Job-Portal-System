@@ -86,6 +86,8 @@ public class CompanyController {
         return companyService.getApplicantsByJob(jobId,userDetails.getUserId());
     }
 
+
+
     // ------ JOB STATUS FEATURES ----
     @GetMapping("/approvedJobs")
     public ResponseEntity<?> getAllApprovedJobs(@AuthenticationPrincipal MyUserDetails userDetails){
@@ -117,18 +119,56 @@ public class CompanyController {
     }
 
     // get all activate jobs
-//    @GetMapping("/getActivateJobs")
-//    public ResponseEntity<?> getActivateJobs(@AuthenticationPrincipal MyUserDetails userDetails){
-//        return companyService.getActivateJobs(userDetails.getUserId());
-//    }
-//
-//    // get all deactivate jobs
-//    @GetMapping("/getDeactivateJobs")
-//    public ResponseEntity<?> getDeactivateJobs(@AuthenticationPrincipal MyUserDetails userDetails){
-//        return companyService.getDeactivateJobs(userDetails.getUserId());
-//    }
+    @GetMapping("/activateJobs")
+    public ResponseEntity<?> getActivateJobs(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getActivateJobs(userDetails.getUserId());
+    }
+
+   // get all deactivate jobs
+    @GetMapping("/deactivateJobs")
+    public ResponseEntity<?> getDeactivateJobs(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getDeactivateJobs(userDetails.getUserId());
+    }
+
+    // ---- Application status features ---
+
+    // Shortlist Application
+    @PutMapping("/applications/shortlistApplication/{applicationId}")
+    public ResponseEntity<?> shortlistApplication(@PathVariable Integer applicationId,@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.shortlistApplication(applicationId,userDetails.getUserId());
+    }
+
+    // Select Application
+    @PutMapping("/applications/selectApplication/{applicationId}")
+    public ResponseEntity<?> selectApplication(@PathVariable Integer applicationId,@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.selectApplication(applicationId,userDetails.getUserId());
+    }
+
+    // Reject Application
+    @PutMapping("/applications/rejectApplication/{applicationId}")
+    public ResponseEntity<?> rejectApplication(@PathVariable Integer applicationId,@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.rejectApplication(applicationId,userDetails.getUserId());
+    }
+
+    // get shortlisted applications
+    @GetMapping("/shortlistedApplications")
+    public ResponseEntity<?> getShortlistedApplications(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getShortlistedApplications(userDetails.getUserId());
+    }
+
+    // get selected applications
+    @GetMapping("/selectedApplications")
+    public ResponseEntity<?> getSelectedApplications(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getSelectedApplications(userDetails.getUserId());
+    }
+
+    // get rejected applications
+    @GetMapping("/rejectedApplications")
+    public ResponseEntity<?> getRejectedApplications(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getRejectedApplications(userDetails.getUserId());
+    }
 
 
-    // get all shortlisted, selected, rejected applications
+
 
 }

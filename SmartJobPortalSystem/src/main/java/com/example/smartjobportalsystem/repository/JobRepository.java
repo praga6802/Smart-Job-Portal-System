@@ -2,6 +2,7 @@ package com.example.smartjobportalsystem.repository;
 
 import com.example.smartjobportalsystem.entity.Company;
 import com.example.smartjobportalsystem.entity.Job;
+import com.example.smartjobportalsystem.entity.JobApplication;
 import com.example.smartjobportalsystem.enums.JobStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -23,4 +24,6 @@ public interface JobRepository extends JpaRepository<Job,Integer> {
     List<Job> findByCompanyAndStatusAndActive(Company company, JobStatus jobStatus, boolean b);
 
     List<Job> findByCompanyAndStatus(Company company, JobStatus jobStatus);
+
+    List<Job> findByCompanyAndActive(Company company, boolean b);
 }

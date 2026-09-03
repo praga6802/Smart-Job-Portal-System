@@ -516,6 +516,7 @@ public class CompanyService {
         return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Application with ID: "+applicationId+" has been REJECTED Successfully!"));
     }
 
+    // get all approved jobs by admin
     public ResponseEntity<?> getAllApprovedJobs(Integer companyId) {
         Company company= companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with this ID: "+companyId));
 
@@ -529,6 +530,7 @@ public class CompanyService {
         return ResponseEntity.ok(jobList);
     }
 
+    // get all rejected status jobs by admin
     public ResponseEntity<?> getAllRejectedJobs(Integer companyId) {
         Company company= companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with this ID: "+companyId));
 
@@ -542,6 +544,7 @@ public class CompanyService {
         return ResponseEntity.ok(jobList);
     }
 
+    // get all pending status jobs by admin
     public ResponseEntity<?> getAllPendingJobs(Integer companyId) {
         Company company= companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with this ID: "+companyId));
 
@@ -556,5 +559,67 @@ public class CompanyService {
     }
 
 
+    // all activate jobs
+    public ResponseEntity<?> getActivateJobs(Integer companyId) {
+        Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with this ID: "+companyId));
+        List<Job> jobs = jobRepository.findByCompanyAndActive(company,true);
+
+        if(jobs.isEmpty()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were active"));
+        }
+
+        List<JobActiveDTO> jobList = jobs.stream().map(JobActiveDTO::new).toList();
+        return ResponseEntity.ok(jobList);
+    }
+
+
+    // all deactivate jobs
+    public ResponseEntity<?> getDeactivateJobs(Integer companyId) {
+        Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with this ID: "+companyId));
+        List<Job> jobs = jobRepository.findByCompanyAndActive(company,false);
+
+        if(jobs.isEmpty()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were deactivate"));
+        }
+
+        List<JobActiveDTO> jobList = jobs.stream().map(JobActiveDTO::new).toList();
+        return ResponseEntity.ok(jobList);
+    }
+
+    // get shortlisted applications
+    public ResponseEntity<?> getShortlistedApplications(Integer companyId) {
+        Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found!"));
+        List<JobApplication> jobApplications = jobApplicationRepository.findByStatusAndJob_Company(ApplicationStatus.SHORTLISTED,company);
+
+        if(jobApplications.isEmpty()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No applications were shortlisted!"));
+        }
+        List<JobApplicationStatusDTO> jobApplicationList = jobApplications.stream().map(JobApplicationStatusDTO::new).toList();
+        return ResponseEntity.ok(jobApplicationList);
+    }
+
+    // get selected applications
+    public ResponseEntity<?> getSelectedApplications(Integer companyId) {
+        Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found!"));
+        List<JobApplication> jobApplications = jobApplicationRepository.findByStatusAndJob_Company(ApplicationStatus.SELECTED,company);
+
+        if(jobApplications.isEmpty()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No applications were selected!"));
+        }
+        List<JobApplicationStatusDTO> jobApplicationList = jobApplications.stream().map(JobApplicationStatusDTO::new).toList();
+        return ResponseEntity.ok(jobApplicationList);
+    }
+
+    // get rejected applications
+    public ResponseEntity<?> getRejectedApplications(Integer companyId) {
+        Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found!"));
+        List<JobApplication> jobApplications = jobApplicationRepository.findByStatusAndJob_Company(ApplicationStatus.REJECTED,company);
+
+        if(jobApplications.isEmpty()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No applications were rejected!"));
+        }
+        List<JobApplicationStatusDTO> jobApplicationList = jobApplications.stream().map(JobApplicationStatusDTO::new).toList();
+        return ResponseEntity.ok(jobApplicationList);
+    }
 }
 
