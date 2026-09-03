@@ -1,6 +1,7 @@
 package com.example.smartjobportalsystem.entity;
 
 
+import com.example.smartjobportalsystem.enums.ApplicationStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,8 +19,11 @@ public class JobApplication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private LocalDateTime appliedAt;
-    private String status;
+    @Column(name="applied_at", updatable = false)
+    private LocalDateTime appliedAt = LocalDateTime.now();
+
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status = ApplicationStatus.APPLIED;
 
     @ManyToOne
     @JoinColumn(name="candidate_id")
@@ -29,10 +33,5 @@ public class JobApplication {
     @JoinColumn(name="job_id")
     private Job job;
 
-
-    public void setDefaults(){
-        status="Applied";
-        appliedAt=LocalDateTime.now();
-    }
 
 }

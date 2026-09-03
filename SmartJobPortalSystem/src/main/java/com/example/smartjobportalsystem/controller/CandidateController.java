@@ -34,7 +34,6 @@ public class CandidateController {
     // apply job
     @PostMapping("/applyJob/{jobId}")
     public ResponseEntity<?> applyJob(@PathVariable Integer jobId, @AuthenticationPrincipal MyUserDetails userDetails){
-        System.out.println("Candidate ID: "+userDetails.getUserId());
         return candidateService.applyJob(jobId, userDetails.getUserId());
     }
 
@@ -46,7 +45,7 @@ public class CandidateController {
 
 
     // get all jobs
-    @GetMapping("/viewAllJobs")
+    @GetMapping("/getAllJobs")
     public ResponseEntity<?> getJobs() {
         return candidateService.getJobs();
     }

@@ -1,6 +1,7 @@
 package com.example.smartjobportalsystem.entity;
 
 
+import com.example.smartjobportalsystem.enums.JobStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -38,22 +39,17 @@ public class Job {
     private String experience;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime postedDate;
+    private LocalDateTime postedDate = LocalDateTime.now();
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private JobStatus status= JobStatus.PENDING;
+
+    @Column(name="active")
+    private boolean active=false;
 
     @ManyToOne
     @JoinColumn(name="company_id",nullable = false)
     private Company company;
 
-
-    @PrePersist
-    public void setDefaults(){
-        if(postedDate==null)
-            postedDate=LocalDateTime.now();
-
-        if(status==null)
-            status="PENDING";
-    }
 }

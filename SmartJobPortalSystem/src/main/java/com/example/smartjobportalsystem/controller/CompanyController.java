@@ -5,6 +5,7 @@ import com.example.smartjobportalsystem.dto.CompanyRegisterDTO;
 import com.example.smartjobportalsystem.dto.JobDTO;
 import com.example.smartjobportalsystem.entity.Users;
 
+import com.example.smartjobportalsystem.enums.ApplicationStatus;
 import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,38 +72,63 @@ public class CompanyController {
         return companyService.getJobById(jobId,company.getUserId());
     }
 
-    @GetMapping("/job-status")
-    public ResponseEntity<?> viewJobStatus(@AuthenticationPrincipal MyUserDetails userDetails){
-        return companyService.viewJobStatus(userDetails.getUserId());
-    }
 
-
-//    // get applicants for the particular job
-//    @GetMapping("viewApplicants/{jobId}")
-//    public ResponseEntity<?> getApplicantsByJob(@PathVariable Integer jobId, @AuthenticationPrincipal UserDetails company){
-//        String email=company.getUsername();
-//        return companyService.getApplicantsByJob(jobId,email);
-//    }
-
-
-    // get all applicants by company
-    @GetMapping("/viewApplicants")
+    // get total applicants by company
+    @GetMapping("/getAllApplicants")
     public ResponseEntity<?> getAllApplicants(@AuthenticationPrincipal MyUserDetails userDetails){
         return companyService.getAllApplicants(userDetails.getUserId());
     }
-//
-//    // approve the applicant by applicant ID
-//    @PutMapping("/approveApplicant/{appli_id}")
-//    public ResponseEntity approveApplicant(@PathVariable Integer appli_id, @AuthenticationPrincipal UserDetails company){
-//        String email=company.getUsername();
-//        return companyService.approveApplicant(appli_id,email);
+
+
+ // get applicants by job ID
+    @GetMapping("/getApplicants/{jobId}")
+    public ResponseEntity<?> getApplicantsByJob(@PathVariable Integer jobId, @AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getApplicantsByJob(jobId,userDetails.getUserId());
+    }
+
+    // ------ JOB STATUS FEATURES ----
+    @GetMapping("/approvedJobs")
+    public ResponseEntity<?> getAllApprovedJobs(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getAllApprovedJobs(userDetails.getUserId());
+    }
+
+    @GetMapping("/rejectedJobs")
+    public ResponseEntity<?> getAllRejectedJobs(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getAllRejectedJobs(userDetails.getUserId());
+    }
+
+    @GetMapping("/pendingJobs")
+    public ResponseEntity<?> getAllPendingJobs(@AuthenticationPrincipal MyUserDetails userDetails){
+        return companyService.getAllPendingJobs(userDetails.getUserId());
+    }
+
+
+    // ------- JOB ACTIVATE OR INACTIVATE FEATURES -------
+    // activate the job
+    @PutMapping("/jobs/activate/{jobId}")
+    public ResponseEntity<?> activateJob(@PathVariable Integer jobId, @AuthenticationPrincipal MyUserDetails userDetails) {
+        return companyService.activateJob(jobId, userDetails.getUserId());
+    }
+
+    // deactivate the job
+    @PutMapping("/jobs/deactivate/{jobId}")
+    public ResponseEntity<?> deactivateJob(@PathVariable Integer jobId, @AuthenticationPrincipal MyUserDetails userDetails) {
+        return companyService.deactivateJob(jobId,userDetails.getUserId());
+    }
+
+    // get all activate jobs
+//    @GetMapping("/getActivateJobs")
+//    public ResponseEntity<?> getActivateJobs(@AuthenticationPrincipal MyUserDetails userDetails){
+//        return companyService.getActivateJobs(userDetails.getUserId());
 //    }
 //
-//    // reject the applicant by applicant ID
-//    @PutMapping("/rejectApplicant/{app_id}")
-//    public ResponseEntity rejectApplicant(@PathVariable Integer app_id, @AuthenticationPrincipal UserDetails company){
-//        String email=company.getUsername();
-//        return companyService.rejectApplicant(app_id,email);
+//    // get all deactivate jobs
+//    @GetMapping("/getDeactivateJobs")
+//    public ResponseEntity<?> getDeactivateJobs(@AuthenticationPrincipal MyUserDetails userDetails){
+//        return companyService.getDeactivateJobs(userDetails.getUserId());
 //    }
+
+
+    // get all shortlisted, selected, rejected applications
 
 }

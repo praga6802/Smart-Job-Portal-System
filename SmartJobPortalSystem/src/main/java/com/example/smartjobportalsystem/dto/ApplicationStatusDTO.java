@@ -2,6 +2,7 @@ package com.example.smartjobportalsystem.dto;
 
 import com.example.smartjobportalsystem.entity.Job;
 import com.example.smartjobportalsystem.entity.JobApplication;
+import com.example.smartjobportalsystem.enums.JobStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,9 @@ public class ApplicationStatusDTO {
     private String companyName;
     private Double salary;
     private String location;
-    private String status;
+    private JobStatus status;
     private String experience;
+    private boolean isActive;
     private LocalDateTime appliedAt;
 
 
@@ -30,6 +32,7 @@ public class ApplicationStatusDTO {
         this.location=job.getLocation();
         this.status=job.getStatus();
         this.experience=job.getExperience();
+        this.isActive=application.getJob().isActive();
         this.appliedAt=application.getAppliedAt();
     }
 

@@ -2,6 +2,7 @@ package com.example.smartjobportalsystem.service;
 
 import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.*;
+import com.example.smartjobportalsystem.enums.JobStatus;
 import com.example.smartjobportalsystem.exception.NotFoundException;
 import com.example.smartjobportalsystem.repository.*;
 import jakarta.transaction.Transactional;
@@ -164,12 +165,23 @@ public class CandidateService {
         Candidate candidate= candidateRepository.findByUser_UserId(candidateId).orElseThrow(()-> new NotFoundException("Candidate not found with id: "+candidateId));
         Job job = jobRepository.findById(jobId).orElseThrow(()-> new NotFoundException("Job not found with id: "+jobId));
 
+
+        if (job.getStatus() != JobStatus.APPROVED) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(), "Failure", "Job is not approved by admin!"));
+        }
+        if(!job.isActive()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No longer accepting applications!"));
+        }
+
+        if(jobApplicationRepository.existsByCandidate_CandidateIdAndJob_JobId(candidate.getCandidateId(),job.getJobId())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","You have already applied for this job!"));
+        }
+
         JobApplication jobApplication = new JobApplication();
         jobApplication.setCandidate(candidate);
         jobApplication.setJob(job);
-        jobApplication.setDefaults();
-
         jobApplicationRepository.save(jobApplication);
+
 
         return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Job Applied Successfully"));
     }
@@ -179,7 +191,7 @@ public class CandidateService {
     public ResponseEntity<?> getJobsByCompany(String companyName) {
         Company company = companyRepository.findByName(companyName).orElseThrow(()-> new NotFoundException("Company not found"));
 
-        List<Job> companyJobList = jobRepository.findByCompany(company);
+        List<Job> companyJobList = jobRepository.findByCompanyAndStatusAndActive(company,JobStatus.APPROVED,true);
         if(companyJobList.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
         }
@@ -190,7 +202,7 @@ public class CandidateService {
 
     // get all jobs
     public ResponseEntity<?> getJobs() {
-        List<Job> jobs = jobRepository.findAll();
+        List<Job> jobs = jobRepository.findByStatusAndActive(JobStatus.APPROVED,true);
         if(jobs.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
         }
@@ -199,6 +211,7 @@ public class CandidateService {
         return ResponseEntity.ok(jobList);
     }
 
+    // view application status
     public ResponseEntity<?> viewApplicationStatus(Integer candidateId) {
         Candidate candidate= candidateRepository.findByUser_UserId(candidateId).orElseThrow(()-> new NotFoundException("Candidate not found with id: "+candidateId));
 
