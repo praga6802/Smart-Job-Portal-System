@@ -50,11 +50,11 @@ public class AdminService {
     public ResponseEntity<?> register(AdminRegisterDTO admin) {
 
         if (adminRepository.existsByEmail(admin.getEmail()) || usersRepository.existsByEmail(admin.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(LocalDateTime.now(), "Failure", "Email already exists!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDTO(LocalDateTime.now(), "Failure", "Email already exists!"));
         }
 
         if (adminRepository.existsByContact(admin.getContact())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(LocalDateTime.now(), "Failure", "Mobile Number already exists!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDTO(LocalDateTime.now(), "Failure", "Mobile Number already exists!"));
         }
         Users user = new Users();
         user.setEmail(admin.getEmail());
@@ -73,7 +73,7 @@ public class AdminService {
 
         adminRepository.save(admin1);
 
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", "Registration Successfully"));
+        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(), "Success", "Admin Registered Successfully"));
     }
 
     // update admin details
@@ -96,10 +96,10 @@ public class AdminService {
 
         if (admin.getEmail() != null && !admin.getEmail().trim().isEmpty()) {
             if (admin1.getEmail().equalsIgnoreCase(admin.getEmail())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same Email"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same Email"));
             }
             if (adminRepository.existsByEmail(admin.getEmail()) || usersRepository.existsByEmail(admin.getEmail())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(), "Failure", "Email already taken!"));
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Email already taken!"));
             }
             admin1.setEmail(admin.getEmail());
             user.setEmail(admin.getEmail());
@@ -110,11 +110,11 @@ public class AdminService {
         }
         if (admin.getContact() != null && !admin.getContact().trim().isEmpty()) {
             if (admin1.getContact().equals(admin.getContact())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same contact!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same contact!"));
             }
 
             if (adminRepository.existsByContact(admin.getContact())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Contact already registered!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Contact already registered!"));
             }
             admin1.setContact(admin.getContact());
             updatedFields.add("Contact");
@@ -122,7 +122,7 @@ public class AdminService {
 
         if (admin.getPassword() != null && !admin.getPassword().trim().isEmpty()) {
             if (admin1.getPassword().matches(admin.getPassword())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same password!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same password!"));
             }
 
             String encodedPassword = passwordEncoder.encode(admin.getPassword());
@@ -138,29 +138,29 @@ public class AdminService {
 
         String message = "Company " + String.join(",", updatedFields) + " Updated Successfully!";
         if (newToken != null) {
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", message, newToken));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", message, newToken));
         }
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", message));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", message));
     }
 
     // get all admins
     public ResponseEntity<?> getAdmins() {
-        List<AdminDTO> adminList = adminRepository.findAll().stream()
-                .map(AdminDTO::new)
+        List<AdminResponseDTO> adminList = adminRepository.findAll().stream()
+                .map(AdminResponseDTO::new)
                 .collect(Collectors.toList());
 
         if (adminList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", "No admins Found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "No admins Found!"));
         }
         return ResponseEntity.ok(adminList);
     }
 
     // get all candidates
     public ResponseEntity<?> getCandidates() {
-        List<CandidateDTO> candidateList = candidateRepository.findAll().stream().
-                map(CandidateDTO::new).collect(Collectors.toList());
+        List<CandidateResponseDTO> candidateList = candidateRepository.findAll().stream().
+                map(CandidateResponseDTO::new).collect(Collectors.toList());
         if (candidateList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", "No Candidates Found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "No Candidates Found!"));
         }
         return ResponseEntity.ok(candidateList);
     }
@@ -170,7 +170,7 @@ public class AdminService {
         List<CompanyDTO> companyList = companyRepository.findAll().stream().
                 map(CompanyDTO::new).collect(Collectors.toList());
         if (companyList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", "No Companies Found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "No Companies Found!"));
         }
         return ResponseEntity.ok(companyList);
     }
@@ -179,10 +179,10 @@ public class AdminService {
     public ResponseEntity<?> getAdmin(Integer id) {
         try {
             Admin admin = adminRepository.findById(id).orElseThrow(() -> new NotFoundException("Admin not found with id: " + id));
-            AdminDTO adminDTO = new AdminDTO(admin);
+            AdminResponseDTO adminDTO = new AdminResponseDTO(admin);
             return ResponseEntity.ok(adminDTO);
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", e.getMessage()));
         }
     }
 
@@ -190,10 +190,10 @@ public class AdminService {
     public ResponseEntity<?> getCandidate(Integer id) {
         try {
             Candidate candidate = candidateRepository.findById(id).orElseThrow(() -> new NotFoundException("Candidate not found with id: " + id));
-            CandidateDTO candidateDTO = new CandidateDTO(candidate);
+            CandidateResponseDTO candidateDTO = new CandidateResponseDTO(candidate);
             return ResponseEntity.ok(candidateDTO);
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", e.getMessage()));
         }
     }
 
@@ -204,7 +204,7 @@ public class AdminService {
             CompanyDTO companyDTO = new CompanyDTO(company);
             return ResponseEntity.ok(companyDTO);
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", e.getMessage()));
         }
     }
 
@@ -213,10 +213,10 @@ public class AdminService {
         try {
             Candidate candidate = candidateRepository.findById(candidateId).orElseThrow(() -> new NotFoundException("Candidate not found with this id: " + candidateId));
             candidateRepository.deleteById(candidateId);
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", "Candidate deleted successfully!"));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", "Candidate deleted successfully!"));
         }
         catch (NotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure",e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(),"Failure",e.getMessage()));
         }
     }
 
@@ -225,10 +225,10 @@ public class AdminService {
         try {
             Company company = companyRepository.findById(companyId).orElseThrow(() -> new NotFoundException("Company not found with this id: " + companyId));
             companyRepository.deleteById(companyId);
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", "Company deleted successfully!"));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", "Company deleted successfully!"));
         }
         catch (NotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure",e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(),"Failure",e.getMessage()));
         }
     }
 
@@ -238,7 +238,7 @@ public class AdminService {
             if (adminId.equals(currentAdminId)) {
                 return ResponseEntity
                         .status(HttpStatus.FORBIDDEN)
-                        .body(new LoginResponse(
+                        .body(new LoginResponseDTO(
                                 LocalDateTime.now(),
                                 "Failure",
                                 "You cannot delete your own admin account"
@@ -247,9 +247,9 @@ public class AdminService {
             Admin admin = adminRepository.findById(adminId).orElseThrow(() -> new NotFoundException("Admin not found with this id " + adminId));
 
             adminRepository.delete(admin);
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", "Admin Deleted Successfully"));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", "Admin Deleted Successfully"));
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(), "Failure", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", e.getMessage()));
         }
     }
 
@@ -257,7 +257,7 @@ public class AdminService {
     public ResponseEntity<?> deleteAdmins(Integer currentAdminId) {
             List<Admin> admins= adminRepository.findAll();
             if(admins.isEmpty()){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Admins were found!"));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No Admins were found!"));
             }
 
             // remove the current logged in admin
@@ -265,27 +265,27 @@ public class AdminService {
 
             // delete other admins
             adminRepository.deleteAll(admins);
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Admins deleted successfully"));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Admins deleted successfully"));
     }
 
     // delete all candidates
     public ResponseEntity<?> deleteCandidates() {
         List<Candidate> candidates = candidateRepository.findAll();
         if(candidates.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Candidates were found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No Candidates were found!"));
         }
         candidateRepository.deleteAll();
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Candidates deleted successfully"));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Candidates deleted successfully"));
     }
 
     // delete all companies
     public ResponseEntity<?> deleteCompanies() {
         List<Company> companies = companyRepository.findAll();
         if(companies.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Companies were found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No Companies were found!"));
         }
         companyRepository.deleteAll();
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Companies deleted successfully"));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Companies deleted successfully"));
     }
 
     // pending jobs list
@@ -293,7 +293,7 @@ public class AdminService {
         List<Job> pendingJobs = jobRepository.findByStatus(JobStatus.PENDING);
 
         if(pendingJobs.isEmpty()){
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were in pending"));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Failure","No jobs were in pending"));
         }
 
         List<AdminJobStatusDTO> pendingList = pendingJobs.stream().map(AdminJobStatusDTO::new).toList();
@@ -306,7 +306,7 @@ public class AdminService {
         List<Job> approvedJobs = jobRepository.findByStatus(JobStatus.APPROVED);
 
         if(approvedJobs.isEmpty()){
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Failure","No jobs were found!"));
         }
 
         List<AdminJobStatusDTO> approvedList = approvedJobs.stream().map(AdminJobStatusDTO::new).toList();
@@ -318,7 +318,7 @@ public class AdminService {
         List<Job> rejectedJobs = jobRepository.findByStatus(JobStatus.REJECTED);
 
         if(rejectedJobs.isEmpty()){
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were found!"));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Failure","No jobs were found!"));
         }
 
         List<AdminJobStatusDTO> rejectedList = rejectedJobs.stream().map(AdminJobStatusDTO::new).toList();
@@ -331,7 +331,7 @@ public class AdminService {
 
         job.setStatus(JobStatus.APPROVED);
         jobRepository.save(job);
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Job Approved Successfully"));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Job Approved Successfully"));
     }
 
     // reject job
@@ -340,12 +340,12 @@ public class AdminService {
 
         job.setStatus(JobStatus.REJECTED);
         jobRepository.save(job);
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Job Rejected Successfully"));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Job Rejected Successfully"));
     }
 
     // get applications per job
     public ResponseEntity<?> getApplicationsPerJob() {
-        List<AppPerJobCount> applications =
+        List<ApplicationsJobDTO> applications =
                 jobApplicationRepository.getApplicationsPerJob().orElseThrow(()-> new NotFoundException("No Applications found!"));
 
         return ResponseEntity.ok(applications);
@@ -353,7 +353,7 @@ public class AdminService {
 
     // get applications per company
     public ResponseEntity<?> getApplicationsPerCompany() {
-        List<AppPerCompanyCount> applications = jobApplicationRepository.getApplicationsPerCompany()
+        List<ApplicationsCompanyDTO> applications = jobApplicationRepository.getApplicationsPerCompany()
                 .orElseThrow(()-> new NotFoundException("No Applications were found"));
 
         return ResponseEntity.ok(applications);
@@ -364,7 +364,7 @@ public class AdminService {
         Long count  = jobApplicationRepository.getTotalApplications();
 
         if(count==0L){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Applications found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No Applications found"));
         }
         return ResponseEntity.ok(count);
     }
@@ -374,7 +374,7 @@ public class AdminService {
         Long count  = companyRepository.getTotalCompanies();
 
         if(count==0L){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Applications found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No Applications found"));
         }
         return ResponseEntity.ok(count);
     }
@@ -384,7 +384,7 @@ public class AdminService {
         Long count  = candidateRepository.getTotalCandidates();
 
         if(count==0L){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(),"Failure","No Applications found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No Applications found"));
         }
         return ResponseEntity.ok(count);
     }

@@ -22,6 +22,9 @@ public class Candidate {
     private String skills;
     private String experience;
 
+    @Column(name = "email_verified")
+    private boolean isVerified;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private Users user;
@@ -109,5 +112,13 @@ public class Candidate {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
     }
 }

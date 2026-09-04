@@ -2,8 +2,8 @@ package com.example.smartjobportalsystem.controller;
 
 
 
-import com.example.smartjobportalsystem.dto.LoginRequest;
-import com.example.smartjobportalsystem.dto.LoginResponse;
+import com.example.smartjobportalsystem.dto.LoginRequestDTO;
+import com.example.smartjobportalsystem.dto.LoginResponseDTO;
 import com.example.smartjobportalsystem.service.AuthService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest){
         return authService.login(loginRequest);
     }
 

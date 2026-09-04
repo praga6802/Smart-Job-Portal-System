@@ -11,14 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.function.Consumer;
 
 @Service
 public class AuthService {
@@ -35,22 +33,19 @@ public class AuthService {
     @Autowired
     private JWTService jwtService;
 
-    @Autowired
-    private RefreshTokenService refreshTokenService;
-
 
     //login feature
-    public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponseDTO> login(LoginRequestDTO loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             MyUserDetails user = (MyUserDetails) authentication.getPrincipal();
 
             String jwtToken = jwtService.generateToken(user.getEmail());
-            LoginResponse response = new LoginResponse("Success", "Login Successfully", jwtToken, user.getRole());
+            LoginResponseDTO response = new LoginResponseDTO("Success", "Login Successfully", jwtToken, user.getRole());
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(LocalDateTime.now(),"Failure","Invalid Credentials"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","Invalid Credentials"));
         }
     }
 
@@ -58,7 +53,7 @@ public class AuthService {
 
     //logout feature
     public ResponseEntity<?> logout() {
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Logout Successfully!"));
+        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(),"Success","Logout Successfully!"));
     }
 
 
@@ -69,21 +64,21 @@ public class AuthService {
         Users user=usersRepo.findByEmail(email).orElseThrow(()->new NameNotFoundException("Email",email));
         if(password==null|| reEnterPassword==null || reEnterPassword.isBlank() || password.isBlank()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","Password cannot be empty"));
+                    body(new ApiResponseDTO(LocalDateTime.now(),"Failure","Password cannot be empty"));
         }
         if(passwordEncoder.matches(password, user.getPassword())
         || passwordEncoder.matches(reEnterPassword, user.getPassword())){
             return ResponseEntity.status(HttpStatus.CONFLICT).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","Dont Enter the same Password"));
+                    body(new ApiResponseDTO(LocalDateTime.now(),"Failure","Dont Enter the same Password"));
         }
         if(!password.equals(reEnterPassword)){
             return ResponseEntity.status(HttpStatus.CONFLICT).
-                    body(new ApiResponse(LocalDateTime.now(),"Failure","Password do not matches"));
+                    body(new ApiResponseDTO(LocalDateTime.now(),"Failure","Password do not matches"));
         }
         String encodePassword=passwordEncoder.encode(password);
         user.setPassword(encodePassword);
         usersRepo.save(user);
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(),"Success","Your password has been reset successfully..You are set to login"));
+        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(),"Success","Your password has been reset successfully..You are set to login"));
     }
 
 

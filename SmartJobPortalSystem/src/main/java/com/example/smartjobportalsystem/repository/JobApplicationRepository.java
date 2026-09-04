@@ -1,19 +1,16 @@
 package com.example.smartjobportalsystem.repository;
 
-import com.example.smartjobportalsystem.dto.AppPerCompanyCount;
-import com.example.smartjobportalsystem.dto.AppPerJobCount;
-import com.example.smartjobportalsystem.dto.JobStatusDTO;
+import com.example.smartjobportalsystem.dto.ApplicationsCompanyDTO;
+import com.example.smartjobportalsystem.dto.ApplicationsJobDTO;
 import com.example.smartjobportalsystem.entity.Candidate;
 import com.example.smartjobportalsystem.entity.Company;
 import com.example.smartjobportalsystem.entity.Job;
 import com.example.smartjobportalsystem.entity.JobApplication;
 
 import com.example.smartjobportalsystem.enums.ApplicationStatus;
-import com.example.smartjobportalsystem.enums.JobStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,7 +28,7 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 
 
     @Query("""
-            SELECT new com.example.smartjobportalsystem.dto.AppPerJobCount(
+            SELECT new com.example.smartjobportalsystem.dto.ApplicationsJobDTO(
                 j.jobId,j.title,c.name,COUNT(a)
             )
             FROM JobApplication a
@@ -39,7 +36,7 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
             JOIN j.company c
             GROUP BY j.jobId,j.title,c.name
             """)
-    Optional<List<AppPerJobCount>> getApplicationsPerJob();
+    Optional<List<ApplicationsJobDTO>> getApplicationsPerJob();
 
 
     @Query("SELECT COUNT(a) from JobApplication a")
@@ -47,13 +44,13 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 
 
     @Query("""
-           SELECT new com.example.smartjobportalsystem.dto.AppPerCompanyCount(
+           SELECT new com.example.smartjobportalsystem.dto.ApplicationsCompanyDTO(
                 c.companyId,c.name, COUNT(a)
            )
            FROM JobApplication a JOIN a.job j JOIN j.company c 
            GROUP BY c.companyId, c.name
             """)
-    Optional<List<AppPerCompanyCount>> getApplicationsPerCompany();
+    Optional<List<ApplicationsCompanyDTO>> getApplicationsPerCompany();
 
 
     List<JobApplication> findByJob(Job job);
