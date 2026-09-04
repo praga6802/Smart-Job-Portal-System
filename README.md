@@ -93,9 +93,10 @@ The system supports:
 
 * Resume upload
 * Resume storage
-* Resume download
 * Resume validation
-* Resume retrieval through secured APIs
+* Resume retrieval
+* Resume download
+* Resume deletion
 
 ## 📝 Job Application Management
 
@@ -134,9 +135,12 @@ src/main/java
     ├── repository
     ├── entity
     ├── dto
-    ├── security
+    ├── enums
     ├── exception
     └── configuration
+    └── filter
+    └── pojo
+
 ```
 
 ### Architecture Flow
