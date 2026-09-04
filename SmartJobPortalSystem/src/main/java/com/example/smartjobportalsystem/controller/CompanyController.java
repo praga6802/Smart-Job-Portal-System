@@ -2,10 +2,8 @@ package com.example.smartjobportalsystem.controller;
 
 
 import com.example.smartjobportalsystem.dto.CompanyRegisterDTO;
-import com.example.smartjobportalsystem.dto.JobDTO;
-import com.example.smartjobportalsystem.entity.Users;
+import com.example.smartjobportalsystem.dto.JobRegisterDTO;
 
-import com.example.smartjobportalsystem.enums.ApplicationStatus;
 import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +33,13 @@ public class CompanyController {
     // -------- JOB FEATURES ------------
     // post job
     @PostMapping("/postJob")
-    public ResponseEntity<?> postJob(@RequestBody JobDTO job, @AuthenticationPrincipal MyUserDetails user){
+    public ResponseEntity<?> postJob(@RequestBody JobRegisterDTO job, @AuthenticationPrincipal MyUserDetails user){
         return companyService.postJob(job,user.getUserId());
     }
 
     //update job by id
     @PutMapping("/updateJob/{jobId}")
-    public ResponseEntity<?> updateJob(@PathVariable Integer jobId,@RequestBody JobDTO job, @AuthenticationPrincipal MyUserDetails company){
+    public ResponseEntity<?> updateJob(@PathVariable Integer jobId, @RequestBody JobRegisterDTO job, @AuthenticationPrincipal MyUserDetails company){
         return companyService.updateJob(jobId,job,company.getUserId());
     }
 

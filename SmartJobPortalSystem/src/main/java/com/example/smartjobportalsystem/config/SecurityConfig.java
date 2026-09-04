@@ -3,7 +3,6 @@ package com.example.smartjobportalsystem.config;
 
 import com.example.smartjobportalsystem.filter.JWTValidationFilter;
 import com.example.smartjobportalsystem.service.MyUserDetailsService;
-import com.example.smartjobportalsystem.service.RefreshTokenService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,10 +30,6 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-
-    @Autowired
-    private RefreshTokenService refreshTokenService;
-
     @Autowired
     private MyUserDetailsService userDetailsService;
 
@@ -45,7 +40,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/company/register","/auth/candidate/register",
+        return http.authorizeHttpRequests(req->req.requestMatchers("/auth/company/register","/auth/candidate/register","/auth/candidate/verify-otp",
                                 "/auth/admin/register","/auth/login").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                     .requestMatchers("/auth/user/**").hasRole("USER")

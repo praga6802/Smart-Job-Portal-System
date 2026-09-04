@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CompanyService {
@@ -50,19 +49,19 @@ public class CompanyService {
     public ResponseEntity<?> register(CompanyRegisterDTO company) {
 
         if (companyRepository.existsByEmail(company.getEmail()) || usersRepository.existsByEmail(company.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(LocalDateTime.now(), "Failure", "Email already exists!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDTO(LocalDateTime.now(), "Failure", "Email already exists!"));
         }
 
         if (companyRepository.existsByContact(company.getContact())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(LocalDateTime.now(), "Failure", "Mobile Number already exists!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDTO(LocalDateTime.now(), "Failure", "Mobile Number already exists!"));
         }
 
         if (companyRepository.existsByUrl(company.getUrl())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(LocalDateTime.now(), "Failure", "Company URL already exists!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDTO(LocalDateTime.now(), "Failure", "Company URL already exists!"));
         }
 
         if (companyRepository.existsByGst(company.getGst())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(LocalDateTime.now(), "Failure", "GST Number already exists!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDTO(LocalDateTime.now(), "Failure", "GST Number already exists!"));
         }
 
         Users user = new Users();
@@ -86,7 +85,7 @@ public class CompanyService {
 
         companyRepository.save(c1);
 
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", "Registration Successfully"));
+        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(), "Success", "Candidate Registered Successfully"));
     }
 
     // update company details
@@ -108,11 +107,11 @@ public class CompanyService {
 
         if (company.getEmail() != null && !company.getEmail().trim().isEmpty()) {
             if (company.getEmail().equals(comp.getEmail())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same Email"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same Email"));
             }
 
             if (companyRepository.existsByEmail(company.getEmail())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(), "Failure", "Email already taken!"));
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Email already taken!"));
             }
             comp.setEmail(company.getEmail());
             user.setEmail(company.getEmail());
@@ -123,11 +122,11 @@ public class CompanyService {
 
         if (company.getContact() != null && !company.getContact().trim().isEmpty()) {
             if (comp.getContact().equals(company.getContact())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same contact!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same contact!"));
             }
 
             if (companyRepository.existsByContact(company.getContact())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Contact already registered!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Contact already registered!"));
             }
             comp.setContact(company.getContact());
             updatedFields.add("Contact");
@@ -135,7 +134,7 @@ public class CompanyService {
 
         if (company.getPassword() != null && !company.getPassword().trim().isEmpty()) {
             if (comp.getPassword().matches(company.getPassword())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same password!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same password!"));
             }
             String encodedPassword = passwordEncoder.encode(company.getPassword());
             comp.setPassword(encodedPassword);
@@ -147,11 +146,11 @@ public class CompanyService {
 
         if (company.getUrl() != null && !company.getUrl().trim().isEmpty()) {
             if (comp.getUrl().equals(company.getUrl())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same URL!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same URL!"));
             }
 
             if (companyRepository.existsByUrl(company.getUrl())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "URL already registered!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "URL already registered!"));
             }
             comp.setUrl(company.getUrl());
             updatedFields.add("URL");
@@ -159,11 +158,11 @@ public class CompanyService {
 
         if (company.getGst() != null && !company.getGst().trim().isEmpty()) {
             if (comp.getGst().equals(company.getGst())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same GST!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same GST!"));
             }
 
             if (companyRepository.existsByGst(company.getGst())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "GST already registered!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "GST already registered!"));
             }
             comp.setGst(company.getGst());
             updatedFields.add("GST");
@@ -171,7 +170,7 @@ public class CompanyService {
 
         if (company.getDescription() != null && !company.getDescription().trim().isEmpty()) {
             if (comp.getDescription().equals(company.getDescription())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same description!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same description!"));
             }
             comp.setDescription(company.getDescription());
             updatedFields.add("Description");
@@ -179,7 +178,7 @@ public class CompanyService {
 
         if (company.getSize() != null && !company.getSize().trim().isEmpty()) {
             if (comp.getSize().equals(company.getSize())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same size!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same size!"));
             }
             comp.setSize(company.getSize());
             updatedFields.add("Size");
@@ -187,7 +186,7 @@ public class CompanyService {
 
         if (company.getType() != null && !company.getType().trim().isEmpty()) {
             if (comp.getType().equals(company.getType())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same type!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same type!"));
             }
             comp.setType(company.getType());
             updatedFields.add("Type");
@@ -195,7 +194,7 @@ public class CompanyService {
 
         if (company.getLocation() != null && !company.getLocation().trim().isEmpty()) {
             if (comp.getLocation().equals(company.getLocation())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse(LocalDateTime.now(), "Failure", "Do not enter same location!"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same location!"));
             }
             comp.setLocation(company.getLocation());
             updatedFields.add("Location");
@@ -206,7 +205,7 @@ public class CompanyService {
 
         if (updatedFields.isEmpty()) {
             return ResponseEntity.ok(
-                    new ApiResponse(
+                    new ApiResponseDTO(
                             LocalDateTime.now(),
                             "Success",
                             "No fields were updated!"
@@ -216,13 +215,13 @@ public class CompanyService {
 
         String message = "Company " + String.join(",", updatedFields) + " Updated Successfully!";
         if (newToken != null) {
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", message, newToken));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", message, newToken));
         }
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", message));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", message));
     }
 
     // post new job
-    public ResponseEntity<?> postJob(JobDTO job, Integer companyId) {
+    public ResponseEntity<?> postJob(JobRegisterDTO job, Integer companyId) {
         Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(() -> new NotFoundException("Company not found!"));
         Job j = new Job();
         j.setTitle(job.getTitle());
@@ -236,11 +235,11 @@ public class CompanyService {
         j.setCompany(company);
 
         jobRepository.save(j);
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", "New Job has been posted Successfully"));
+        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(), "Success", "New Job has been posted Successfully"));
     }
 
     // update job details
-    public ResponseEntity<?> updateJob(Integer jobId, JobDTO jobDTO, Integer companyId) {
+    public ResponseEntity<?> updateJob(Integer jobId, JobRegisterDTO jobDTO, Integer companyId) {
         Company company = companyRepository.findByUser_UserId(companyId).orElseThrow(() -> new NotFoundException("Company not found!"));
 
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new NotFoundException("Job not found!"));
@@ -290,7 +289,7 @@ public class CompanyService {
 
         String message = "Job " + String.join(",", updatedDetails) + " updated Successfully!";
 
-        return ResponseEntity.ok(new ApiResponse(LocalDateTime.now(), "Success", message));
+        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(), "Success", message));
     }
 
     // delete job by ID
@@ -306,7 +305,7 @@ public class CompanyService {
         }
 
         jobRepository.delete(job);
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", "Job Deleted Successfully!"));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", "Job Deleted Successfully!"));
 
     }
 
@@ -317,10 +316,10 @@ public class CompanyService {
         List<Job> jobs = jobRepository.findByCompany(company);
 
         if (jobs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", "No jobs were found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "No jobs were found!"));
         }
         jobRepository.deleteAll(jobs);
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", "All jobs deleted Successfully"));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", "All jobs deleted Successfully"));
     }
 
     // get all jobs
@@ -329,7 +328,7 @@ public class CompanyService {
 
         List<Job> jobs = jobRepository.findByCompany(company);
         if (jobs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", "No jobs were found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "No jobs were found!"));
         }
 
         List<JobResponseDTO> jobList = jobs.stream().map(JobResponseDTO::new).toList();
@@ -356,7 +355,7 @@ public class CompanyService {
 
         List<Job> companyJobs = jobRepository.findByCompany(company);
         if (companyJobs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", "No jobs were found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "No jobs were found!"));
         }
 
         List<CompanyJobStatusDTO> statusList = companyJobs.stream().map(CompanyJobStatusDTO::new).toList();
@@ -369,11 +368,11 @@ public class CompanyService {
         List<JobApplication> jobApplications = jobApplicationRepository.findByJob_Company(company);
 
         if (jobApplications.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", "No Applicants were found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "No Applicants were found!"));
         }
 
-        List<JobApplicantsResponseDTO> applicantsList = jobApplications.stream().map(application -> {
-            return new JobApplicantsResponseDTO(application.getAppliedAt(), application.getCandidate().getFirstname(),
+        List<JobApplicationResponseDTO> applicantsList = jobApplications.stream().map(application -> {
+            return new JobApplicationResponseDTO(application.getAppliedAt(), application.getCandidate().getFirstname(),
                     application.getCandidate().getLastname(), application.getCandidate().getEmail(),
                     application.getCandidate().getContact(), application.getCandidate().getSkills(), application.getCandidate().getExperience(),
                     application.getJob().getJobId(), application.getJob().getTitle());
@@ -389,16 +388,16 @@ public class CompanyService {
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new NotFoundException("Job not found with ID: !" + jobId));
 
         if (!job.getCompany().getCompanyId().equals(company.getCompanyId())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(), "Failure", "You are not authorized to view this job's applicants!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "You are not authorized to view this job's applicants!"));
         }
 
         List<JobApplication> jobApplications = jobApplicationRepository.findByJob(job);
 
         if (jobApplications.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponse(LocalDateTime.now(), "Failure", "No Applicants were found!"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "No Applicants were found!"));
         }
-        List<JobApplicantsResponseDTO> applicantsList = jobApplications.stream().map(application -> {
-            return new JobApplicantsResponseDTO(
+        List<JobApplicationResponseDTO> applicantsList = jobApplications.stream().map(application -> {
+            return new JobApplicationResponseDTO(
                     application.getAppliedAt(),
                     application.getCandidate().getFirstname(),
                     application.getCandidate().getLastname(),
@@ -421,19 +420,19 @@ public class CompanyService {
 
         if (job.getCompany().getCompanyId().equals(company.getCompanyId())) {
             if (job.getStatus() != JobStatus.APPROVED) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),
                         "Failure", "Only approved jobs can be activated!"));
             }
 
             if (job.isActive()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(), "Failure", "Already it is activated!"));
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Already it is activated!"));
             }
             job.setActive(true);
             jobRepository.save(job);
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", "Job Activated Successfully"));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", "Job Activated Successfully"));
         }
         else{
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse(LocalDateTime.now(),"Failure","You are not allowed to set active status!"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","You are not allowed to set active status!"));
         }
     }
 
@@ -444,19 +443,19 @@ public class CompanyService {
 
         if (job.getCompany().getCompanyId().equals(company.getCompanyId())) {
             if (job.getStatus() != JobStatus.APPROVED) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),
                         "Failure", "Only approved jobs can be deactivated!"));
             }
 
             if (!job.isActive()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(), "Failure", "Already it is deactivated!"));
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Already it is deactivated!"));
             }
             job.setActive(false);
             jobRepository.save(job);
-            return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(), "Success", "Job Deactivated Successfully"));
+            return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", "Job Deactivated Successfully"));
         }
         else{
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse(LocalDateTime.now(),"Failure","You are not allowed to set active status!"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","You are not allowed to set active status!"));
         }
     }
 
@@ -466,16 +465,16 @@ public class CompanyService {
         Company company =companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with ID: ",companyId));
 
         if(!jobApplication.getJob().getCompany().getCompanyId().equals(company.getCompanyId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse(LocalDateTime.now(),"Failure","You cannot SHORTLIST this application"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","You cannot SHORTLIST this application"));
         }
 
         if(jobApplication.getStatus()!=ApplicationStatus.APPLIED){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse(LocalDateTime.now(),"Failure","Only with Status:Applied can be shortlisted!"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","Only with Status:Applied can be shortlisted!"));
         }
 
         jobApplication.setStatus(ApplicationStatus.SHORTLISTED);
         jobApplicationRepository.save(jobApplication);
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Application with ID: "+applicationId+" has been SHORTLISTED Successfully!"));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Application with ID: "+applicationId+" has been SHORTLISTED Successfully!"));
     }
 
 
@@ -485,16 +484,16 @@ public class CompanyService {
         Company company =companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with ID: ",companyId));
 
         if(!jobApplication.getJob().getCompany().getCompanyId().equals(company.getCompanyId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse(LocalDateTime.now(),"Failure","You cannot SELECT this application"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","You cannot SELECT this application"));
         }
 
         if(jobApplication.getStatus()!=ApplicationStatus.SHORTLISTED){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse(LocalDateTime.now(),"Failure","Only with Status:Shortlisted can be Selected!"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","Only with Status:Shortlisted can be Selected!"));
         }
 
         jobApplication.setStatus(ApplicationStatus.SELECTED);
         jobApplicationRepository.save(jobApplication);
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Application with ID: "+applicationId+" has been SELECTED Successfully!"));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Application with ID: "+applicationId+" has been SELECTED Successfully!"));
     }
 
     // reject application
@@ -503,17 +502,17 @@ public class CompanyService {
         Company company =companyRepository.findByUser_UserId(companyId).orElseThrow(()-> new NotFoundException("Company not found with ID: ",companyId));
 
         if(!jobApplication.getJob().getCompany().getCompanyId().equals(company.getCompanyId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse(LocalDateTime.now(),"Failure","You cannot REJECT this application"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","You cannot REJECT this application"));
         }
 
         if(jobApplication.getStatus()==ApplicationStatus.SELECTED || jobApplication.getStatus()==ApplicationStatus.REJECTED){
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new LoginResponse(LocalDateTime.now(),"Failure","Application cannot be rejected when status is: "+jobApplication.getStatus()));
+                    .body(new LoginResponseDTO(LocalDateTime.now(),"Failure","Application cannot be rejected when status is: "+jobApplication.getStatus()));
         }
 
         jobApplication.setStatus(ApplicationStatus.REJECTED);
         jobApplicationRepository.save(jobApplication);
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now(),"Success","Application with ID: "+applicationId+" has been REJECTED Successfully!"));
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Application with ID: "+applicationId+" has been REJECTED Successfully!"));
     }
 
     // get all approved jobs by admin
@@ -523,7 +522,7 @@ public class CompanyService {
         List<Job> companyJobs= jobRepository.findByCompanyAndStatus(company, JobStatus.APPROVED);
 
         if(companyJobs.isEmpty()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No APPROVED jobs were found!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No APPROVED jobs were found!"));
         }
 
         List<JobStatusDTO> jobList = companyJobs.stream().map(JobStatusDTO::new).toList();
@@ -537,7 +536,7 @@ public class CompanyService {
         List<Job> companyJobs= jobRepository.findByCompanyAndStatus(company, JobStatus.REJECTED);
 
         if(companyJobs.isEmpty()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No REJECTED jobs were found!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No REJECTED jobs were found!"));
         }
 
         List<JobStatusDTO> jobList = companyJobs.stream().map(JobStatusDTO::new).toList();
@@ -551,7 +550,7 @@ public class CompanyService {
         List<Job> companyJobs= jobRepository.findByCompanyAndStatus(company, JobStatus.PENDING);
 
         if(companyJobs.isEmpty()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No PENDING jobs were found!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No PENDING jobs were found!"));
         }
 
         List<JobStatusDTO> jobList = companyJobs.stream().map(JobStatusDTO::new).toList();
@@ -565,10 +564,10 @@ public class CompanyService {
         List<Job> jobs = jobRepository.findByCompanyAndActive(company,true);
 
         if(jobs.isEmpty()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were active"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No jobs were active"));
         }
 
-        List<JobActiveDTO> jobList = jobs.stream().map(JobActiveDTO::new).toList();
+        List<ActiveJobsDTO> jobList = jobs.stream().map(ActiveJobsDTO::new).toList();
         return ResponseEntity.ok(jobList);
     }
 
@@ -579,10 +578,10 @@ public class CompanyService {
         List<Job> jobs = jobRepository.findByCompanyAndActive(company,false);
 
         if(jobs.isEmpty()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No jobs were deactivate"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No jobs were deactivate"));
         }
 
-        List<JobActiveDTO> jobList = jobs.stream().map(JobActiveDTO::new).toList();
+        List<ActiveJobsDTO> jobList = jobs.stream().map(ActiveJobsDTO::new).toList();
         return ResponseEntity.ok(jobList);
     }
 
@@ -592,7 +591,7 @@ public class CompanyService {
         List<JobApplication> jobApplications = jobApplicationRepository.findByStatusAndJob_Company(ApplicationStatus.SHORTLISTED,company);
 
         if(jobApplications.isEmpty()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No applications were shortlisted!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No applications were shortlisted!"));
         }
         List<JobApplicationStatusDTO> jobApplicationList = jobApplications.stream().map(JobApplicationStatusDTO::new).toList();
         return ResponseEntity.ok(jobApplicationList);
@@ -604,7 +603,7 @@ public class CompanyService {
         List<JobApplication> jobApplications = jobApplicationRepository.findByStatusAndJob_Company(ApplicationStatus.SELECTED,company);
 
         if(jobApplications.isEmpty()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No applications were selected!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No applications were selected!"));
         }
         List<JobApplicationStatusDTO> jobApplicationList = jobApplications.stream().map(JobApplicationStatusDTO::new).toList();
         return ResponseEntity.ok(jobApplicationList);
@@ -616,7 +615,7 @@ public class CompanyService {
         List<JobApplication> jobApplications = jobApplicationRepository.findByStatusAndJob_Company(ApplicationStatus.REJECTED,company);
 
         if(jobApplications.isEmpty()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponse(LocalDateTime.now(),"Failure","No applications were rejected!"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","No applications were rejected!"));
         }
         List<JobApplicationStatusDTO> jobApplicationList = jobApplications.stream().map(JobApplicationStatusDTO::new).toList();
         return ResponseEntity.ok(jobApplicationList);

@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/auth/candidate")
@@ -58,49 +61,36 @@ public class CandidateController {
     }
 
 
-//
-//
-//    // ----------------------- EMAIL verification ---------------------------
-//    @PostMapping("/verifyEmail")
-//    public ResponseEntity<?> verifyEmailAndSendCode(@RequestBody EmailReqDTO emailDTO, @AuthenticationPrincipal UserDetails user) {
-//        String logEmail = user.getUsername();
-//        String mail = emailDTO.getEmail();
-//        return userService.verifyEmailAndSendCode(logEmail, mail);
-//    }
-//
-//    @PostMapping("/verifyEmailCode")
-//    public ResponseEntity<?> verifyEmailCode(@RequestBody EmailVerificationDTO verify, @AuthenticationPrincipal UserDetails user) {
-//        return userService.verifyEmailCode(user, verify.getCode());
-//    }
-//
-//
-//    // ----------------------- RESUME features ---------------------------
-//    // upload resume
-//    @PostMapping("/uploadResume")
-//    public ResponseEntity<?> uploadResume(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal UserDetails user) throws IOException {
-//        String email = user.getUsername();
-//        return userService.uploadResume(file, email);
-//    }
-//
-//    //delete resume
-//    @DeleteMapping("/deleteResume")
-//    public ResponseEntity<?> deleteResume(@AuthenticationPrincipal UserDetails user) throws IOException {
-//        String email=user.getUsername();
-//        return userService.deleteResume(email);
-//    }
-//
-//  //view resume
-//    @GetMapping("/viewResume")
-//    public ResponseEntity<?> viewResume(@AuthenticationPrincipal UserDetails user) throws Exception{
-//        String email=user.getUsername();
-//        return userService.viewResume(email);
-//    }
-//
-//    //download resume
-//    @GetMapping("/downloadResume")
-//    public ResponseEntity<?> downloadResume(@AuthenticationPrincipal UserDetails user) throws Exception{
-//        String email=user.getUsername();
-//        return userService.downloadResume(email);
-//    }
+    // ----------------------- RESUME features ---------------------------
+    // upload resume
+    @PostMapping("/uploadResume")
+    public ResponseEntity<?> uploadResume(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal MyUserDetails candidate) throws IOException {
+        return candidateService.uploadResume(file, candidate.getUserId());
+    }
+
+    //delete resume
+    @DeleteMapping("/deleteResume")
+    public ResponseEntity<?> deleteResume(@AuthenticationPrincipal MyUserDetails candidate) throws IOException {
+        return candidateService.deleteResume(candidate.getUserId());
+    }
+
+    //view resume
+    @GetMapping("/viewResume")
+    public ResponseEntity<?> viewResume(@AuthenticationPrincipal MyUserDetails candidate) throws Exception{
+        return candidateService.viewResume(candidate.getUserId());
+    }
+
+    //download resume
+    @GetMapping("/downloadResume")
+    public ResponseEntity<?> downloadResume(@AuthenticationPrincipal MyUserDetails candidate) throws Exception{
+        return candidateService.downloadResume(candidate.getUserId());
+    }
+
+    // ----------------------- EMAIL verification ---------------------------
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<?> verifyOtp(@RequestBody CandidateRegistrationVerificationDTO candidate) {
+        return candidateService.verifyOtp(candidate.getEmail(),candidate.getOtp());
+    }
 
 }
