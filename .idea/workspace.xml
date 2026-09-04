@@ -5,100 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d4f43ba-cabb-4a3e-b837-a045f2008cfd" name="Changes" comment="updated">
-      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/CandidateRegistrationVerificationDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Verification.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/VerifyCandidate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/VerificationRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/VerifyCandidateRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/OTPRequestDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/EmailUpdate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/EmailUpdateRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CandidateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CandidateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CompanyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/controller/CompanyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/AdminDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/AdminResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ApiResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ApiResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/AppPerCompanyCount.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ApplicationsCompanyDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/AppPerJobCount.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ApplicationsJobDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/CandidateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/CandidateResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/DeleteUserDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/EmailDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/EmailRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/EmailReqDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/EmailVerificationDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ForgotPasswordDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/JWTResponseDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/JobActiveDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/ActiveJobsDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/JobApplicantsResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/JobApplicationResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/JobDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/JobRegisterDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/LoginRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/LoginResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/LoginResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/LoginUserDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/MobileReqDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/MobileVerificationDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/PendingJobDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/RefreshTokenRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/UpdateUserDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/VerificationType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Candidate.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Candidate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/RefreshToken.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/ResumeEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Resume.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/VerificationTable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/exception/GlobalExceptionalHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/exception/GlobalExceptionalHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/JobApplicationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/JobApplicationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/RefreshTokenRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/ResumeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/ResumeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/VerificationRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/LoginResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/dto/LoginResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Verification.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Verification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/VerificationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/VerificationRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AuthService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CandidateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CandidateService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CompanyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CompanyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/RefreshTokenService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/json data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/json data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/config/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/AuthController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CandidateController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CandidateController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CompanyController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CompanyController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/AdminDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/ApiResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/AppPerCompanyCount.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/AppPerJobCount.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/CandidateDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/DeleteUserDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/EmailDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/EmailReqDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/EmailVerificationDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/ForgotPasswordDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/JWTResponseDTO$JWTResponseDTOBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/JWTResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/JobActiveDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/JobApplicantsResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/JobDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/LoginRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/LoginResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/LoginUserDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/MobileReqDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/MobileVerificationDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/PendingJobDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/RefreshTokenRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/UpdateUserDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/VerificationType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/Candidate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/Candidate.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/RefreshToken$RefreshTokenBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/RefreshToken.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/ResumeEntity.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/VerificationTable.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/exception/GlobalExceptionalHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/exception/GlobalExceptionalHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/JobApplicationRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/JobApplicationRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/RefreshTokenRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/ResumeRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/ResumeRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/repository/VerificationRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/AdminService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/AdminService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/LoginResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/dto/LoginResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/Verification.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/entity/Verification.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/AuthService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/AuthService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/CandidateService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/CandidateService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/CompanyService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/CompanyService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/EmailService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/service/RefreshTokenService.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,8 +32,8 @@
         <option value="Dockerfile" />
         <option value="Exception" />
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>

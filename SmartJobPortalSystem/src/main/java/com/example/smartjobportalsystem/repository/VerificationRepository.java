@@ -11,4 +11,6 @@ public interface VerificationRepository extends JpaRepository<Verification, Inte
 
 
     Optional<Verification> findByEmailAndOtpAndIsUsedFalse(String email, String otp);
+
+    Optional<Verification> findByOtpAndIsUsedFalse(String otp);
 }

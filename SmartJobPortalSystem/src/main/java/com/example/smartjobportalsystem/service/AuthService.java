@@ -41,7 +41,7 @@ public class AuthService {
             MyUserDetails user = (MyUserDetails) authentication.getPrincipal();
 
             String jwtToken = jwtService.generateToken(user.getEmail());
-            LoginResponseDTO response = new LoginResponseDTO("Success", "Login Successfully", jwtToken, user.getRole());
+            LoginResponseDTO response = new LoginResponseDTO(LocalDateTime.now(),"Success", "Login Successfully", user.getRole(), jwtToken);
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
             e.printStackTrace();

@@ -29,6 +29,7 @@ public class CandidateController {
 
     @PutMapping("/update")
     public  ResponseEntity<?> updateCandidate(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody CandidateRegisterDTO candidate){
+        System.out.println("Log in candidate: "+userDetails.getUsername());
         return candidateService.updateCandidate(userDetails.getUserId(),candidate);
     }
 
@@ -91,6 +92,12 @@ public class CandidateController {
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody CandidateRegistrationVerificationDTO candidate) {
         return candidateService.verifyOtp(candidate.getEmail(),candidate.getOtp());
+    }
+
+    @PostMapping("/verify-email-update")
+    public ResponseEntity<?> verifyEmailUpdate(@RequestBody OTPRequestDTO otp, @AuthenticationPrincipal MyUserDetails userDetails){
+        System.out.println(userDetails.getEmail()+" "+userDetails.getUsername());
+        return candidateService.verifyEmailUpdate(otp.getOtp(),userDetails.getUserId());
     }
 
 }

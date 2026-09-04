@@ -57,6 +57,9 @@ public class CandidateService {
     @Autowired
     private VerifyCandidateRepository verifyCandidateRepository;
 
+    @Autowired
+    private EmailUpdateRepository emailUpdateRepository;
+
 
     // candidate registration
     public ResponseEntity<?> register(CandidateRegisterDTO candidate) {
@@ -113,12 +116,11 @@ public class CandidateService {
             if (candidateRepository.existsByEmail(candidate.getEmail()) || usersRepository.existsByEmail(candidate.getEmail())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Email already taken!"));
             }
-            cand.setEmail(candidate.getEmail().trim());
-            user.setEmail(candidate.getEmail().trim());
-            usersRepository.save(user);
-            updatedFields.add("Email");
+            VerifyCandidate verifyCandidate = new VerifyCandidate();
+            verifyCandidate.setEmail(candidate.getEmail());
+            verifyCandidateRepository.save(verifyCandidate);
 
-            newToken = jwtService.generateToken(candidate.getEmail());
+            return verifyEmail(candidate.getEmail());
         }
 
         if (candidate.getContact() != null && !candidate.getContact().trim().isEmpty()) {
@@ -364,6 +366,7 @@ public class CandidateService {
 
         String candidateName = verifyCandidateRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Candidate not found")).getFirstname();
         int otp=100000+new Random().nextInt(900000);
+
         Verification verification=new Verification();
         verification.setEmail(email);
         verification.setOtp(String.valueOf(otp));
@@ -389,7 +392,7 @@ public class CandidateService {
         return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(), "Success", "OTP has been sent to your Email: "+email));
     }
 
-    // verify OTP from email
+    // verify OTP for register user
     public ResponseEntity<?> verifyOtp(String email, String otp) {
 
         VerifyCandidate verifyCandidate = verifyCandidateRepository.findByEmail(email).orElseThrow(()-> new NotFoundException("Email not matches!"));
@@ -429,7 +432,42 @@ public class CandidateService {
         verificationRepository.save(verification);
 
         verifyCandidateRepository.delete(verifyCandidate); // delete temporary candidate details
+        verificationRepository.delete(verification);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponseDTO(LocalDateTime.now(),"Success", "Candidate registered successfully!"));
+    }
+
+    // verify otp for email update
+    public ResponseEntity<?> verifyEmailUpdate(String otp, Integer userId) {
+        Verification verification = verificationRepository.findByOtpAndIsUsedFalse(otp)
+                .orElseThrow(()-> new NotFoundException("Invalid OTP: "+otp));
+
+        if(verification.getExpiresAt().isBefore(LocalDateTime.now())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new LoginResponseDTO(LocalDateTime.now(),"Failure","OTP has expired!"));
+        }
+
+        VerifyCandidate verifyCandidate = verifyCandidateRepository.findByEmail(verification.getEmail()).orElseThrow(()-> new NotFoundException("New email not found"));
+
+
+        Users users = usersRepository.findById(userId).orElseThrow(()-> new NotFoundException("User not found!"));
+        Candidate candidate = candidateRepository.findByUser_UserId(userId).orElseThrow(()-> new NotFoundException("Candidate not found!"));
+
+        users.setEmail(verifyCandidate.getEmail());
+        usersRepository.save(users);
+
+        candidate.setEmail(verifyCandidate.getEmail());
+        candidateRepository.save(candidate);
+
+        verification.setVerified(true);
+        verification.setUsed(true);
+        verificationRepository.save(verification);
+
+        verifyCandidateRepository.delete(verifyCandidate);
+        verificationRepository.delete(verification);
+
+        String token = jwtService.generateToken(verifyCandidate.getEmail());
+        return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Email Updated Successfully",token));
+
+
     }
 }

@@ -21,7 +21,6 @@ public class Verification {
     @Column(name="email",nullable = false)
     private String email;
 
-
     @Column(name="otp", nullable = false)
     private String otp;
 
