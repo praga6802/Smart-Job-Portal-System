@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -443,6 +442,21 @@ public class CandidateService {
         verification.setVerified(true); // email is verified
         verificationRepository.save(verification);
 
+
+        // send welcome email after successful registration
+        EmailRequestDTO emailDTO = new EmailRequestDTO();
+        emailDTO.setToEmail(verifyCandidate.getEmail());
+        emailDTO.setSubject("Welcome to Smart Job Portal – Your Career Journey Starts Here!");
+        emailDTO.setDescription(
+                "Hi "+newCandidate.getFirstname() + " "+newCandidate.getLastname()+", \n\n"+
+                "Welcome to Smart Job Portal!" + "\n" +
+                "Your registration was successful. \n\n" +
+                "Go ahead, explore new job opportunities, apply for your dream job, and get hired faster with our platform! \n\n" +
+                "Best wishes,\n" +
+                "Smart Job Portal Team"
+        );
+        emailService.sendEmail(emailDTO);
+
         verifyCandidateRepository.delete(verifyCandidate); // delete temporary candidate details
         verificationRepository.delete(verification);
 
@@ -474,10 +488,22 @@ public class CandidateService {
         verification.setUsed(true);
         verificationRepository.save(verification);
 
+        String token = jwtService.generateToken(verifyCandidate.getEmail());
+
+        // send success after new email updation
+        EmailRequestDTO emailDTO = new EmailRequestDTO();
+        emailDTO.setToEmail(verifyCandidate.getEmail());
+        emailDTO.setSubject("Email Updation Successful!");
+        emailDTO.setDescription(
+                "Hi "+ candidate.getFirstname()+" "+candidate.getLastname() +", \n\n"+
+                "Your email has been SUCCESSFULLY updated from "+ users.getEmail() + " to " +verifyCandidate.getEmail()+ "\n\n" +
+                "Best regards, \n\n" +
+                "Smart Job Portal team."
+                );
+
         verifyCandidateRepository.delete(verifyCandidate);
         verificationRepository.delete(verification);
 
-        String token = jwtService.generateToken(verifyCandidate.getEmail());
         return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(),"Success","Email Updated Successfully",token));
 
 
