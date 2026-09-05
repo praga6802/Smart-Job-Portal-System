@@ -92,8 +92,7 @@ public class AdminController {
 
         return adminService.deleteAdmin(adminId, currentAdminId);
     }
-
-
+    
     // Delete all Admins
     @DeleteMapping("/delete-admins")
     public ResponseEntity<?> deleteAdmins(@AuthenticationPrincipal Users user){
