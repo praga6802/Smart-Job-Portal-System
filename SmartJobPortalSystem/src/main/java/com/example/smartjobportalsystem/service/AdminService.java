@@ -56,23 +56,38 @@ public class AdminService {
         if (adminRepository.existsByContact(admin.getContact())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDTO(LocalDateTime.now(), "Failure", "Mobile Number already exists!"));
         }
+
         Users user = new Users();
-        user.setEmail(admin.getEmail());
-        user.setPassword(passwordEncoder.encode(admin.getPassword()));
+        if(admin.getEmail()!=null && !admin.getEmail().isEmpty()){
+            user.setEmail(admin.getEmail());
+        }
+
+        if(admin.getPassword()!=null && !admin.getPassword().isEmpty()){
+            user.setPassword(passwordEncoder.encode(admin.getPassword()));
+        }
         user.setRole("ADMIN");
         usersRepository.save(user);
 
         Admin admin1 = new Admin();
-        admin1.setFirstname(admin.getFirstname());
-        admin1.setLastname(admin.getLastname());
-        admin1.setEmail(admin.getEmail());
-        admin1.setContact(admin.getContact());
-        admin1.setPassword(passwordEncoder.encode(admin.getPassword()));
+        if(admin.getFirstname()!=null && !admin.getFirstname().isEmpty()) {
+            admin1.setFirstname(admin.getFirstname());
+        }
+
+        if(admin.getLastname()!=null && !admin.getLastname().isEmpty()) {
+            admin1.setLastname(admin.getLastname());
+        }
+
+        if(admin.getEmail()!=null && !admin.getEmail().isEmpty()) {
+            admin1.setEmail(admin.getEmail());
+        }
+
+        if(admin.getContact()!=null && !admin.getContact().isEmpty()){
+            admin1.setContact(admin.getContact());
+        }
 
         admin1.setUser(user);
 
         adminRepository.save(admin1);
-
         return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(), "Success", "Admin Registered Successfully"));
     }
 
@@ -120,21 +135,7 @@ public class AdminService {
             updatedFields.add("Contact");
         }
 
-        if (admin.getPassword() != null && !admin.getPassword().trim().isEmpty()) {
-            if (admin1.getPassword().matches(admin.getPassword())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same password!"));
-            }
-
-            String encodedPassword = passwordEncoder.encode(admin.getPassword());
-            admin.setPassword(encodedPassword);
-            user.setPassword(encodedPassword);
-            usersRepository.save(user);
-
-            updatedFields.add("Password");
-        }
-
         adminRepository.save(admin1);
-
 
         String message = "Company " + String.join(",", updatedFields) + " Updated Successfully!";
         if (newToken != null) {

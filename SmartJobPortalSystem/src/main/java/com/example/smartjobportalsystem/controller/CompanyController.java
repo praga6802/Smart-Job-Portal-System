@@ -32,7 +32,7 @@ public class CompanyController {
 
     // -------- JOB FEATURES ------------
     // post job
-    @PostMapping("/postJob")
+    @PostMapping("/post-job")
     public ResponseEntity<?> postJob(@RequestBody JobRegisterDTO job, @AuthenticationPrincipal MyUserDetails user){
         return companyService.postJob(job,user.getUserId());
     }
@@ -52,14 +52,14 @@ public class CompanyController {
 
 
     // delete all jobs
-    @DeleteMapping("/deleteJobs")
+    @DeleteMapping("/delete-jobs")
     public ResponseEntity<?> deleteJobs(@AuthenticationPrincipal MyUserDetails company){
         return companyService.deleteJobs(company.getUserId());
     }
 
 
     //get all jobs
-    @GetMapping("/getAllJobs")
+    @GetMapping("/get-jobs")
     public ResponseEntity<?> getJobs(@AuthenticationPrincipal MyUserDetails company){
         return companyService.getJobs(company.getUserId());
     }
@@ -72,7 +72,7 @@ public class CompanyController {
 
 
     // get total applicants by company
-    @GetMapping("/getAllApplicants")
+    @GetMapping("/get-applicants")
     public ResponseEntity<?> getAllApplicants(@AuthenticationPrincipal MyUserDetails userDetails){
         return companyService.getAllApplicants(userDetails.getUserId());
     }
@@ -87,12 +87,12 @@ public class CompanyController {
 
 
     // ------ JOB STATUS FEATURES ----
-    @GetMapping("/approvedJobs")
+    @GetMapping("/approved-jobs")
     public ResponseEntity<?> getAllApprovedJobs(@AuthenticationPrincipal MyUserDetails userDetails){
         return companyService.getAllApprovedJobs(userDetails.getUserId());
     }
 
-    @GetMapping("/rejectedJobs")
+    @GetMapping("/rejected-jobs")
     public ResponseEntity<?> getAllRejectedJobs(@AuthenticationPrincipal MyUserDetails userDetails){
         return companyService.getAllRejectedJobs(userDetails.getUserId());
     }
@@ -117,13 +117,13 @@ public class CompanyController {
     }
 
     // get all activate jobs
-    @GetMapping("/activateJobs")
+    @GetMapping("/activate-jobs")
     public ResponseEntity<?> getActivateJobs(@AuthenticationPrincipal MyUserDetails userDetails){
         return companyService.getActivateJobs(userDetails.getUserId());
     }
 
    // get all deactivate jobs
-    @GetMapping("/deactivateJobs")
+    @GetMapping("/deactivated-jobs")
     public ResponseEntity<?> getDeactivateJobs(@AuthenticationPrincipal MyUserDetails userDetails){
         return companyService.getDeactivateJobs(userDetails.getUserId());
     }
@@ -149,24 +149,21 @@ public class CompanyController {
     }
 
     // get shortlisted applications
-    @GetMapping("/shortlistedApplications")
+    @GetMapping("/shortlisted-applications")
     public ResponseEntity<?> getShortlistedApplications(@AuthenticationPrincipal MyUserDetails userDetails){
         return companyService.getShortlistedApplications(userDetails.getUserId());
     }
 
     // get selected applications
-    @GetMapping("/selectedApplications")
+    @GetMapping("/selected-applications")
     public ResponseEntity<?> getSelectedApplications(@AuthenticationPrincipal MyUserDetails userDetails){
         return companyService.getSelectedApplications(userDetails.getUserId());
     }
 
     // get rejected applications
-    @GetMapping("/rejectedApplications")
+    @GetMapping("/rejected-applications")
     public ResponseEntity<?> getRejectedApplications(@AuthenticationPrincipal MyUserDetails userDetails){
         return companyService.getRejectedApplications(userDetails.getUserId());
     }
-
-
-
 
 }

@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CandidateRegisterDTO {
+
     private String firstname;
     private String lastname;
     private String email;
-    private String contact;
     private String password;
+    private String contact;
     private String dob;
     private String skills;
     private String experience;

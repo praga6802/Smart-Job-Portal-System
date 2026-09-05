@@ -65,27 +65,58 @@ public class CompanyService {
         }
 
         Users user = new Users();
-        user.setEmail(company.getEmail());
-        user.setPassword(passwordEncoder.encode(company.getPassword()));
+        if(company.getEmail()!=null && !company.getEmail().isEmpty()){
+            user.setEmail(company.getEmail());
+        }
+
+        if(company.getPassword()!=null && !company.getPassword().isEmpty()){
+            user.setPassword(passwordEncoder.encode(company.getPassword()));
+        }
+
         user.setRole("COMPANY");
         usersRepository.save(user);
 
         Company c1 = new Company();
-        c1.setName(company.getName());
-        c1.setDescription(company.getDescription());
-        c1.setEmail(company.getEmail());
-        c1.setContact(company.getContact());
-        c1.setPassword(passwordEncoder.encode(company.getPassword()));
-        c1.setUrl(company.getUrl());
-        c1.setSize(company.getSize());
-        c1.setType(company.getType());
-        c1.setLocation(company.getLocation());
-        c1.setGst(company.getGst());
+        if(company.getName()!=null && !company.getName().isEmpty()){
+            c1.setName(company.getName());
+        }
+        if(company.getDescription()!=null && !company.getDescription().isEmpty()){
+            c1.setDescription(company.getDescription());
+        }
+        if(company.getEmail()!=null && !company.getEmail().isEmpty()){
+            c1.setEmail(company.getEmail());
+        }
+
+        if(company.getContact()!=null && !company.getContact().isEmpty()){
+            c1.setContact(company.getContact());
+        }
+        if(company.getUrl()!=null && !company.getUrl().isEmpty()){
+            c1.setUrl(company.getUrl());
+        }
+
+        if(company.getSize()!=null && !company.getSize().isEmpty()){
+            c1.setSize(company.getSize());
+        }
+        if(company.getType()!=null && !company.getType().isEmpty()){
+            c1.setType(company.getType());
+        }
+
+        if(company.getLocation()!=null && !company.getLocation().isEmpty()){
+            c1.setLocation(company.getLocation());
+        }
+        if(company.getType()!=null && !company.getType().isEmpty()){
+            c1.setType(company.getType());
+        }
+
+        if(company.getGst()!=null && !company.getGst().isEmpty()){
+            c1.setGst(company.getGst());
+        }
+
         c1.setUser(user);
 
         companyRepository.save(c1);
 
-        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(), "Success", "Candidate Registered Successfully"));
+        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(), "Success", "Company Registered Successfully"));
     }
 
     // update company details
@@ -103,6 +134,14 @@ public class CompanyService {
         if (company.getName() != null && !company.getName().trim().isEmpty()) {
             comp.setName(company.getName());
             updatedFields.add("Name");
+        }
+
+        if (company.getDescription() != null && !company.getDescription().trim().isEmpty()) {
+            if (comp.getDescription().equals(company.getDescription())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same description!"));
+            }
+            comp.setDescription(company.getDescription());
+            updatedFields.add("Description");
         }
 
         if (company.getEmail() != null && !company.getEmail().trim().isEmpty()) {
@@ -132,17 +171,6 @@ public class CompanyService {
             updatedFields.add("Contact");
         }
 
-        if (company.getPassword() != null && !company.getPassword().trim().isEmpty()) {
-            if (comp.getPassword().matches(company.getPassword())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same password!"));
-            }
-            String encodedPassword = passwordEncoder.encode(company.getPassword());
-            comp.setPassword(encodedPassword);
-            user.setPassword(encodedPassword);
-            usersRepository.save(user);
-
-            updatedFields.add("Password");
-        }
 
         if (company.getUrl() != null && !company.getUrl().trim().isEmpty()) {
             if (comp.getUrl().equals(company.getUrl())) {
@@ -156,6 +184,30 @@ public class CompanyService {
             updatedFields.add("URL");
         }
 
+        if (company.getType() != null && !company.getType().trim().isEmpty()) {
+            if (comp.getType().equals(company.getType())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same type!"));
+            }
+            comp.setType(company.getType());
+            updatedFields.add("Type");
+        }
+
+        if (company.getSize() != null && !company.getSize().trim().isEmpty()) {
+            if (comp.getSize().equals(company.getSize())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same size!"));
+            }
+            comp.setSize(company.getSize());
+            updatedFields.add("Size");
+        }
+
+        if (company.getLocation() != null && !company.getLocation().trim().isEmpty()) {
+            if (comp.getLocation().equals(company.getLocation())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same location!"));
+            }
+            comp.setLocation(company.getLocation());
+            updatedFields.add("Location");
+        }
+
         if (company.getGst() != null && !company.getGst().trim().isEmpty()) {
             if (comp.getGst().equals(company.getGst())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same GST!"));
@@ -167,39 +219,6 @@ public class CompanyService {
             comp.setGst(company.getGst());
             updatedFields.add("GST");
         }
-
-        if (company.getDescription() != null && !company.getDescription().trim().isEmpty()) {
-            if (comp.getDescription().equals(company.getDescription())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same description!"));
-            }
-            comp.setDescription(company.getDescription());
-            updatedFields.add("Description");
-        }
-
-        if (company.getSize() != null && !company.getSize().trim().isEmpty()) {
-            if (comp.getSize().equals(company.getSize())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same size!"));
-            }
-            comp.setSize(company.getSize());
-            updatedFields.add("Size");
-        }
-
-        if (company.getType() != null && !company.getType().trim().isEmpty()) {
-            if (comp.getType().equals(company.getType())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same type!"));
-            }
-            comp.setType(company.getType());
-            updatedFields.add("Type");
-        }
-
-        if (company.getLocation() != null && !company.getLocation().trim().isEmpty()) {
-            if (comp.getLocation().equals(company.getLocation())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same location!"));
-            }
-            comp.setLocation(company.getLocation());
-            updatedFields.add("Location");
-        }
-
 
         companyRepository.save(comp);
 

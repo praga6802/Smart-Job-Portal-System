@@ -20,7 +20,6 @@ public class Admin {
     private String lastname;
     private String email;
     private String contact;
-    private String password;
 
     @OneToOne
     @JoinColumn(name = "user_id")
