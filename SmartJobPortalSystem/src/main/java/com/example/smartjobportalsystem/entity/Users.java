@@ -16,6 +16,7 @@ import java.util.List;
 
 @Entity
 @DynamicUpdate
+@Data
 public class Users {
 
     @Id
@@ -25,6 +26,7 @@ public class Users {
     private String email;
     private String password;
     private String role;
+    private Integer tokenVersion=0;
 
     public Users(){}
 
@@ -32,41 +34,6 @@ public class Users {
         this.userId = userId;
         this.email = email;
         this.password = password;
-        this.role = role;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
         this.role = role;
     }
 

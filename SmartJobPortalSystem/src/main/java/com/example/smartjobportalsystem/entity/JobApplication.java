@@ -33,5 +33,9 @@ public class JobApplication {
     @JoinColumn(name="job_id")
     private Job job;
 
+    @ManyToOne
+    @JoinColumn(name="resume_id")
+    private Resume resume;
+
 
 }

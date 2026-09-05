@@ -175,7 +175,7 @@ public class CandidateService {
         candidateRepository.save(cand);
 
 
-        String message = "Company " + String.join(",", updatedFields) + " Updated Successfully!";
+        String message = "Candidate " + String.join(",", updatedFields) + " Updated Successfully!";
         if (newToken != null) {
             return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", message, newToken));
         }
@@ -184,9 +184,11 @@ public class CandidateService {
 
 
     // apply job
-    public ResponseEntity<?> applyJob(Integer jobId, Integer candidateId) {
+    public ResponseEntity<?> applyJob(Integer jobId, Integer userId) {
+        Candidate candidate = candidateRepository.findByUser_UserId(userId).orElseThrow(()-> new NotFoundException("Candidate not found"));
+        Integer candidateId =candidate.getCandidateId();
 
-        Candidate candidate = candidateRepository.findByUser_UserId(candidateId).orElseThrow(() -> new NotFoundException("Candidate not found with id: " + candidateId));
+        Resume resume = resumeRepository.findByCandidate_CandidateId(candidateId).orElseThrow(() -> new NotFoundException("No resume found, upload Resume to apply job"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new NotFoundException("Job not found with id: " + jobId));
 
 
@@ -204,8 +206,8 @@ public class CandidateService {
         JobApplication jobApplication = new JobApplication();
         jobApplication.setCandidate(candidate);
         jobApplication.setJob(job);
+        jobApplication.setResume(resume);
         jobApplicationRepository.save(jobApplication);
-
 
         return ResponseEntity.ok(new LoginResponseDTO(LocalDateTime.now(), "Success", "Job Applied Successfully"));
     }
@@ -266,7 +268,7 @@ public class CandidateService {
         }
 
       //create folder for uploading resume
-        String dirPath = "uploads/resume/" + candidateId + "/";
+        String dirPath = "uploads/resume/" +"CAND_"+ candidateId + "/";
         File dir = new File(dirPath);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -291,7 +293,7 @@ public class CandidateService {
         }
 //
         String extension= Objects.requireNonNull(reqFileName).substring(reqFileName.lastIndexOf("."));
-        String fileName=candidate.getFirstname()+"_"+candidate.getLastname()+"_"+LocalDate.now()+extension;
+        String fileName=candidate.getFirstname()+"_"+candidate.getLastname()+extension;
 
         //creating file path
         Path filePath= Paths.get(dirPath + fileName);

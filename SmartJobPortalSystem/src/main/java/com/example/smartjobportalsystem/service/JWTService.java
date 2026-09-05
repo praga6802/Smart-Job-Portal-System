@@ -1,10 +1,16 @@
 package com.example.smartjobportalsystem.service;
 
+import com.example.smartjobportalsystem.entity.Users;
+import com.example.smartjobportalsystem.exception.NotFoundException;
+import com.example.smartjobportalsystem.repository.UsersRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.websocket.Decoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +27,23 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    private String SECRET_KEY="";
+    @Autowired
+    private UsersRepository usersRepository;
 
-    public JWTService() throws NoSuchAlgorithmException {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
-        SecretKey secretKey =keyGenerator.generateKey();
-        SECRET_KEY = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-    }
+    @Value("${jwt.secret_key}")
+    private String SECRET_KEY;
 
 
     public String generateToken(String username) {
+        Users user = usersRepository.findByEmail(username).orElseThrow(()-> new NotFoundException("User not found"));
+
         Map<String,Object> claims = new HashMap<>();
+        claims.put("tokenVersion",user.getTokenVersion());
         return Jwts.builder()
-                .claims().add(claims)
+                .claims(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+30*60*1000))
-                .and()
+                .expiration(new Date(System.currentTimeMillis()+30*60*1000)) // 30 minutes
                 .signWith(getKey())
                 .compact();
     }
@@ -74,5 +80,9 @@ public class JWTService {
 
     private Date extractExpiration(String token) {
         return extractClaim(token,Claims::getExpiration);
+    }
+
+    public Integer extractTokenVersion(String token) {
+        return extractAllClaims(token).get("tokenVersion", Integer.class);
     }
 }

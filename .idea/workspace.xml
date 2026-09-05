@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d4f43ba-cabb-4a3e-b837-a045f2008cfd" name="Changes" comment="updated" />
+    <list default="true" id="3d4f43ba-cabb-4a3e-b837-a045f2008cfd" name="Changes" comment="updated">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/JobApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/JobApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/entity/Users.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/filter/JWTValidationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/filter/JWTValidationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/pojo/MyUserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/pojo/MyUserDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/ResumeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/repository/ResumeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CandidateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/CandidateService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/JWTService.java" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/java/com/example/smartjobportalsystem/service/JWTService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/SmartJobPortalSystem/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/AdminController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CandidateController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CandidateController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CompanyController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SmartJobPortalSystem/com/example/smartjobportalsystem/controller/CompanyController.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
