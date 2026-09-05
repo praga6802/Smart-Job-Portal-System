@@ -77,8 +77,9 @@ public class AuthService {
 
         String encodedPassword=passwordEncoder.encode(password);
         user.setPassword(encodedPassword);
+        user.setTokenVersion(user.getTokenVersion()+1);
         usersRepository.save(user);
-        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(),"Success","Your password has been reset successfully..You are set to login"));
+        return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(),"Success","Your password has been reset successfully! Please login again."));
     }
 
 
