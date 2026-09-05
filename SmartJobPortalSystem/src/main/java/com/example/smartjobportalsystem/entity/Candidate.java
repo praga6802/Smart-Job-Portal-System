@@ -3,7 +3,6 @@ package com.example.smartjobportalsystem.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.time.LocalDate;
 
 @Entity
 @DynamicUpdate
@@ -17,7 +16,6 @@ public class Candidate {
     private String lastname;
     private String email;
     private String contact;
-    private String password;
     private String dateOfBirth;
     private String skills;
     private String experience;
@@ -105,14 +103,6 @@ public class Candidate {
         this.email = email;
     }
 
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public boolean isVerified() {
         return isVerified;

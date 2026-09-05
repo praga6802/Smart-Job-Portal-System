@@ -74,16 +74,39 @@ public class CandidateService {
 
         //storing candidate temporarily
         VerifyCandidate verifyCandidate = new VerifyCandidate();
-        verifyCandidate.setFirstname(candidate.getFirstname().trim());
-        verifyCandidate.setLastname(candidate.getLastname().trim());
-        verifyCandidate.setEmail(candidate.getEmail().toLowerCase().trim());
-        verifyCandidate.setContact(candidate.getContact().trim());
-        verifyCandidate.setPassword(passwordEncoder.encode(candidate.getPassword()).trim());
-        verifyCandidate.setDateOfBirth(candidate.getDob().trim());
-        verifyCandidate.setExperience(candidate.getExperience().trim());
-        verifyCandidate.setSkills(candidate.getSkills().trim());
-        verifyCandidate.setCreatedAt(LocalDateTime.now());
+        if (candidate.getFirstname() != null && !candidate.getFirstname().isBlank()) {
+            verifyCandidate.setFirstname(candidate.getFirstname().trim());
+        }
 
+        if (candidate.getLastname() != null && !candidate.getLastname().isBlank()) {
+            verifyCandidate.setLastname(candidate.getLastname().trim());
+        }
+
+        if (candidate.getEmail() != null && !candidate.getEmail().isBlank()) {
+            verifyCandidate.setEmail(candidate.getEmail().trim().toLowerCase());
+        }
+
+        if (candidate.getPassword() != null && !candidate.getPassword().isBlank()) {
+            verifyCandidate.setPassword(passwordEncoder.encode(candidate.getPassword().trim()));
+        }
+
+        if (candidate.getContact() != null && !candidate.getContact().isBlank()) {
+            verifyCandidate.setContact(candidate.getContact().trim());
+        }
+
+        if (candidate.getDob() != null && !candidate.getDob().isBlank()) {
+            verifyCandidate.setDateOfBirth(candidate.getDob().trim());
+        }
+
+        if (candidate.getExperience() != null && !candidate.getExperience().isBlank()) {
+            verifyCandidate.setExperience(candidate.getExperience().trim());
+        }
+
+        if (candidate.getSkills() != null && !candidate.getSkills().isBlank()) {
+            verifyCandidate.setSkills(candidate.getSkills().trim());
+        }
+
+        verifyCandidate.setCreatedAt(LocalDateTime.now());
         verifyCandidateRepository.save(verifyCandidate);
 
         return verifyEmail(candidate.getEmail());
@@ -133,18 +156,6 @@ public class CandidateService {
             }
             cand.setContact(candidate.getContact().trim());
             updatedFields.add("Contact");
-        }
-
-        if (candidate.getPassword() != null && !candidate.getPassword().trim().isEmpty()) {
-            if (cand.getPassword().matches(candidate.getPassword())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponseDTO(LocalDateTime.now(), "Failure", "Do not enter same password!"));
-            }
-            String encodedPassword = passwordEncoder.encode(candidate.getPassword());
-            cand.setPassword(encodedPassword.trim());
-            user.setPassword(encodedPassword.trim());
-            usersRepository.save(user);
-
-            updatedFields.add("Password");
         }
 
         if (candidate.getDob() != null && !candidate.getDob().trim().isEmpty()) {
@@ -418,7 +429,6 @@ public class CandidateService {
         newCandidate.setLastname(verifyCandidate.getLastname());
         newCandidate.setEmail(verifyCandidate.getEmail());
         newCandidate.setContact(verifyCandidate.getContact());
-        newCandidate.setPassword(verifyCandidate.getPassword());
         newCandidate.setDateOfBirth(verifyCandidate.getDateOfBirth());
         newCandidate.setExperience(verifyCandidate.getExperience());
         newCandidate.setSkills(verifyCandidate.getSkills());

@@ -18,30 +18,20 @@ public class Company {
 
     @Column(columnDefinition = "TEXT",name = "description")
     private String description;
-
-
     private String contact;
-
-
     private String email;
-    private String password;
-
     private String url;
-
     private String type;
 
     @Column(name = "size")
     private String size;
     private String location;
-
     private String gst;
-
-    private Boolean isVerified = false;
     private LocalDateTime createdAt = LocalDateTime.now();
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private Users user; // Foreign key to Users table
-
 
 
     // Default Constructor
@@ -129,14 +119,6 @@ public class Company {
         this.gst = gst;
     }
 
-    public Boolean getVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(Boolean verified) {
-        isVerified = verified;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -153,11 +135,4 @@ public class Company {
         this.user = user;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

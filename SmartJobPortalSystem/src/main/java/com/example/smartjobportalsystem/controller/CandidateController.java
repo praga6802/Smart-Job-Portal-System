@@ -6,6 +6,7 @@ import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ public class CandidateController {
     // candidate registration
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody CandidateRegisterDTO candidate){
+        System.out.println("Password: "+ candidate.getPassword());
         return candidateService.register(candidate);
     }
 
@@ -42,14 +44,14 @@ public class CandidateController {
     }
 
     // get job by company
-    @GetMapping("/jobs")
+    @GetMapping("/get-job-by-company")
     public ResponseEntity<?> getJobsByCompany(@RequestParam String companyName) {
         return candidateService.getJobsByCompany(companyName);
     }
 
 
     // get all jobs
-    @GetMapping("/getAllJobs")
+    @GetMapping("/get-jobs")
     public ResponseEntity<?> getJobs() {
         return candidateService.getJobs();
     }
@@ -64,25 +66,25 @@ public class CandidateController {
 
     // ----------------------- RESUME features ---------------------------
     // upload resume
-    @PostMapping("/uploadResume")
+    @PostMapping("/upload-resume")
     public ResponseEntity<?> uploadResume(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal MyUserDetails candidate) throws IOException {
         return candidateService.uploadResume(file, candidate.getUserId());
     }
 
     //delete resume
-    @DeleteMapping("/deleteResume")
+    @DeleteMapping("/delete-resume")
     public ResponseEntity<?> deleteResume(@AuthenticationPrincipal MyUserDetails candidate) throws IOException {
         return candidateService.deleteResume(candidate.getUserId());
     }
 
     //view resume
-    @GetMapping("/viewResume")
+    @GetMapping("/view-resume")
     public ResponseEntity<?> viewResume(@AuthenticationPrincipal MyUserDetails candidate) throws Exception{
         return candidateService.viewResume(candidate.getUserId());
     }
 
     //download resume
-    @GetMapping("/downloadResume")
+    @GetMapping("/download-resume")
     public ResponseEntity<?> downloadResume(@AuthenticationPrincipal MyUserDetails candidate) throws Exception{
         return candidateService.downloadResume(candidate.getUserId());
     }

@@ -6,7 +6,6 @@ import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,33 +26,28 @@ public class AdminController {
         return adminService.register(admin);
     }
 
-
     // update admin
     @PutMapping("/update")
     public ResponseEntity<?> updateAdmin(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody AdminRegisterDTO admin){
         return adminService.updateAdmin(userDetails.getUserId(),admin);
     }
 
-
     // get all Admins
-    @GetMapping("/getAdmins")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/get-admins")
     public ResponseEntity<?> getAdmins(){
         return adminService.getAdmins();
     }
 
 
     // get all Candidates
-    @GetMapping("/getCandidates")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/get-candidates")
     public ResponseEntity<?> getCandidates(){
         return adminService.getCandidates();
     }
 
 
     // get all Companies
-    @GetMapping("/getCompanies")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/get-companies")
     public ResponseEntity<?> getCompanies(){
         return adminService.getCompanies();
     }
@@ -61,46 +55,37 @@ public class AdminController {
 
     //get Admin details by ID
     @GetMapping("/getAdmin/{id}")
-    @PreAuthorize("role('ADMIN')")
     public ResponseEntity<?> getAdmin(@PathVariable Integer id){
-
         return adminService.getAdmin(id);
     }
 
 
     //get Candidate details by ID
     @GetMapping("/getCandidate/{id}")
-    @PreAuthorize("role('ADMIN')")
     public ResponseEntity<?> getCandidate(@PathVariable Integer id){
-
         return adminService.getCandidate(id);
     }
 
     //get Company details by ID
     @GetMapping("/getCompany/{id}")
-    @PreAuthorize("role('ADMIN')")
     public ResponseEntity<?> getCompany(@PathVariable Integer id){
-
         return adminService.getCompany(id);
     }
 
     // Delete Candidate by ID
     @DeleteMapping("/deleteCandidate/{candidateId}")
-    @PreAuthorize("role('ADMIN')")
     public ResponseEntity<?> deleteCandidate(@PathVariable Integer candidateId){
         return adminService.deleteCandidate(candidateId);
     }
 
     // Delete Company by ID
     @DeleteMapping("/deleteCompany/{companyId}")
-    @PreAuthorize("role('ADMIN')")
     public ResponseEntity<?> deleteCompany(@PathVariable Integer companyId){
         return adminService.deleteCompany(companyId);
     }
 
     // Delete Admin By ID
     @DeleteMapping("/deleteAdmin/{adminId}")
-    @PreAuthorize("role('ADMIN')")
     public ResponseEntity<?> deleteAdmin(@PathVariable Integer adminId, Authentication authentication){
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         Integer currentAdminId=userDetails.getUserId();
@@ -110,41 +95,37 @@ public class AdminController {
 
 
     // Delete all Admins
-    @DeleteMapping("/deleteAdmins")
-    @PreAuthorize("role('ADMIN')")
+    @DeleteMapping("/delete-admins")
     public ResponseEntity<?> deleteAdmins(@AuthenticationPrincipal Users user){
         return adminService.deleteAdmins(user.getUserId());
     }
 
     // Delete all Candidates
-    @DeleteMapping("/deleteCandidates")
-    @PreAuthorize("role('ADMIN')")
+    @DeleteMapping("/delete-candidates")
     public ResponseEntity<?> deleteCandidates(){
         return adminService.deleteCandidates();
     }
 
     // Delete all Companies
-    @DeleteMapping("/deleteCompanies")
-    @PreAuthorize("role('ADMIN')")
+    @DeleteMapping("/delete-companies")
     public ResponseEntity<?> deleteCompanies(){
         return adminService.deleteCompanies();
     }
 
-
     // Pending Jobs
-    @GetMapping("/pendingJobs")
+    @GetMapping("/pending-jobs")
     public ResponseEntity<?> getPendingJobs(){
         return adminService.getPendingJobs();
     }
 
     // Approved Jobs
-    @GetMapping("/approvedJobs")
+    @GetMapping("/approved-jobs")
     public ResponseEntity<?> getApprovedJobs(){
         return adminService.getApprovedJobs();
     }
 
     // Rejected Jobs
-    @GetMapping("/rejectedJobs")
+    @GetMapping("/rejected-jobs")
     public ResponseEntity<?> getRejectedJobs(){
         return adminService.getRejectedJobs();
     }
@@ -164,34 +145,33 @@ public class AdminController {
    }
 
 
-
    // --- ADMIN STATISTICS ---
     //Applications per job
-    @GetMapping("/applicationsPerJob")
+    @GetMapping("/applications-per-job")
     public ResponseEntity<?> getApplicationsPerJob(){
         return adminService.getApplicationsPerJob();
     }
 
     //Applications per company
-    @GetMapping("/applicationsPerCompany")
+    @GetMapping("/applications-per-company")
     public ResponseEntity<?> getApplicationsPerCompany(){
         return adminService.getApplicationsPerCompany();
     }
 
     // total number of applications
-    @GetMapping("/totalApplications")
+    @GetMapping("/total-applications")
     public ResponseEntity<?> getTotalApplications(){
         return adminService.getTotalApplications();
     }
 
     // total number of companies
-    @GetMapping("/totalCompanies")
+    @GetMapping("/total-companies")
     public ResponseEntity<?> getTotalCompanies(){
         return adminService.getTotalCompanies();
     }
 
     // total number of candidates
-    @GetMapping("/totalCandidates")
+    @GetMapping("/total-candidates")
     public ResponseEntity<?> getTotalCandidates(){
         return adminService.getTotalCandidates();
     }

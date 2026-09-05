@@ -5,6 +5,7 @@ import com.example.smartjobportalsystem.dto.*;
 import com.example.smartjobportalsystem.entity.Users;
 import com.example.smartjobportalsystem.exception.NameNotFoundException;
 
+import com.example.smartjobportalsystem.exception.NotFoundException;
 import com.example.smartjobportalsystem.pojo.MyUserDetails;
 import com.example.smartjobportalsystem.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 public class AuthService {
 
     @Autowired
-    UsersRepository usersRepo;
+    UsersRepository usersRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -50,37 +51,35 @@ public class AuthService {
     }
 
 
-
     //logout feature
     public ResponseEntity<?> logout() {
         return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(),"Success","Logout Successfully!"));
     }
 
 
+    // forgot password and reset
+    public ResponseEntity<?> forgotPassword(String password,String confirmPassword, Integer userId) {
+        Users user=usersRepository.findById(userId).orElseThrow(()->new NotFoundException("User not found with this ID: "+userId));
 
-
-
-    public ResponseEntity<?> forgotPassword(String password,String reEnterPassword, String email) {
-        Users user=usersRepo.findByEmail(email).orElseThrow(()->new NameNotFoundException("Email",email));
-        if(password==null|| reEnterPassword==null || reEnterPassword.isBlank() || password.isBlank()){
+        if(password==null|| password.isBlank() || confirmPassword==null || confirmPassword.isBlank()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).
                     body(new ApiResponseDTO(LocalDateTime.now(),"Failure","Password cannot be empty"));
         }
-        if(passwordEncoder.matches(password, user.getPassword())
-        || passwordEncoder.matches(reEnterPassword, user.getPassword())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).
-                    body(new ApiResponseDTO(LocalDateTime.now(),"Failure","Dont Enter the same Password"));
+
+        if(!password.equals(confirmPassword)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(LocalDateTime.now(),"Failure","New Password and Confirm password do not match"));
         }
-        if(!password.equals(reEnterPassword)){
+
+        if(passwordEncoder.matches(password, user.getPassword())){
             return ResponseEntity.status(HttpStatus.CONFLICT).
-                    body(new ApiResponseDTO(LocalDateTime.now(),"Failure","Password do not matches"));
+                    body(new ApiResponseDTO(LocalDateTime.now(),"Failure","Do not enter the same password as your current password!"));
         }
-        String encodePassword=passwordEncoder.encode(password);
-        user.setPassword(encodePassword);
-        usersRepo.save(user);
+
+        String encodedPassword=passwordEncoder.encode(password);
+        user.setPassword(encodedPassword);
+        usersRepository.save(user);
         return ResponseEntity.ok(new ApiResponseDTO(LocalDateTime.now(),"Success","Your password has been reset successfully..You are set to login"));
     }
-
 
 
 }
